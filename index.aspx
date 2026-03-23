@@ -1,0 +1,3304 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Guia Prático de BPM</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./images/icon.png" type="image/png">
+    <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f5f6fa;
+      color: #222;
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Layout com menu lateral */
+    .page-wrapper { display: flex; min-height: 100vh; }
+    
+    /* Menu lateral */
+    .sidebar { 
+      width: 280px; 
+      background: #01427a; 
+      color: white; 
+      padding: 20px 0; 
+      position: fixed; 
+      height: 100vh; 
+      overflow-y: auto;
+      box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    }
+    
+    .sidebar-header { 
+      padding: 0 20px 20px 20px; 
+      border-bottom: 1px solid #0a5fa7; 
+      margin-bottom: 20px; 
+    }
+    
+    .sidebar-header h3 { 
+      margin: 0; 
+      color: white; 
+      font-size: 18px; 
+      font-weight: 600; 
+    }
+    
+    .sidebar-header p { 
+      margin: 5px 0 0 0; 
+      color: #b3d9ff; 
+      font-size: 14px; 
+    }
+    
+    .nav-menu { 
+      list-style: none; 
+      padding: 0; 
+      margin: 0; 
+    }
+    
+    .nav-menu li { 
+      margin: 0; 
+      border-bottom: 1px solid #0a5fa7; 
+    }
+    
+    .nav-menu a { 
+      display: block; 
+      padding: 15px 20px; 
+      color: #b3d9ff; 
+      text-decoration: none; 
+      transition: all 0.3s ease; 
+      font-size: 14px; 
+      font-weight: 500; 
+    }
+
+    .link-custom {
+      text-decoration: none;
+      color: inherit;
+      transition: color 0.3s;
+    }
+
+    .link-custom:hover {
+      color: #e63946;
+    }
+    
+    .nav-menu a:hover { 
+      background: #0a5fa7; 
+      color: white; 
+      padding-left: 25px; 
+    }
+    
+    .nav-menu a.active { 
+      background: #0a5fa7; 
+      color: white; 
+      border-left: 4px solid #ffb200; 
+    }
+    
+    /* Conteúdo principal */
+    .main-content { 
+      flex: 1; 
+      margin-left: 280px; 
+      padding: 20px; 
+    }
+    
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.09);
+      padding: 32px 40px;
+    }
+    
+    h1, h2, h3 {
+      color: #01427a;
+      margin-top: 1.6em;
+      margin-bottom: 0.7em;
+    }
+    h1 {
+      border-bottom: 2px solid #01427a;
+      padding-bottom: 10px;
+      margin-bottom: 32px;
+    }
+    h2 {
+      margin-top: 2em;
+    }
+    .section {
+      margin-bottom: 2em;
+    }
+    .exemplo, .template, .checklist, .destaque, .metodologia, .evolucao {
+      background: #eaf4fb;
+      border-left: 4px solid #01427a;
+      padding: 18px 22px;
+      margin: 18px 0 24px 0;
+      border-radius: 7px;
+      font-size: 1.05em;
+    }
+    .destaque {
+      background: #fff9e5;
+      border-color: #ffb200;
+      color: #7a5c01;
+    }
+    .metodologia {
+      background: #f1f8e9;
+      border-color: #388e3c;
+      color: #1b5e20;
+    }
+    .evolucao {
+      background: #e3f1ff;
+      border-color: #1976d2;
+      color: #0d47a1;
+    }
+    ul, ol {
+      margin-left: 1.4em;
+      margin-bottom: 0.6em;
+    }
+    .subtitulo {
+      color: #0a5fa7;
+      font-weight: bold;
+      margin-top: 1.1em;
+    }
+    .rodape {
+      text-align: center;
+      color: #888;
+      font-size: 0.92em;
+      margin-top: 38px;
+    }
+    .bpmn-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 30px 0;
+      background: #f5f6fa;
+      border-radius: 10px;
+      padding: 18px 0;
+      text-align: center;
+      width: 100%;
+      max-width: 100%;
+      overflow: hidden;
+    }
+    
+    /* Estilos para elementos interativos - Versão Melhorada */
+    .bpmn-element {
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+    }
+
+    .bpmn-element:hover {
+      filter: brightness(1.15) drop-shadow(0 4px 8px rgba(1, 66, 122, 0.3));
+      transform: scale(1.08);
+      stroke-width: 3;
+    }
+
+    .bpmn-element.active {
+      filter: brightness(1.25) drop-shadow(0 6px 12px rgba(1, 66, 122, 0.4));
+      stroke-width: 4;
+      transform: scale(1.1);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { filter: brightness(1.25) drop-shadow(0 6px 12px rgba(1, 66, 122, 0.4)); }
+      50% { filter: brightness(1.35) drop-shadow(0 8px 16px rgba(1, 66, 122, 0.6)); }
+      100% { filter: brightness(1.25) drop-shadow(0 6px 12px rgba(1, 66, 122, 0.4)); }
+    }
+
+    /* Melhorias no SVG */
+    .bpmn-diagram svg {
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 15px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+      border: 1px solid #dee2e6;
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+
+    /* Animações nos fluxos */
+    .flow-path {
+      stroke-dasharray: 5,5;
+      animation: dash 2s linear infinite;
+    }
+
+    @keyframes dash {
+      to { stroke-dashoffset: -10; }
+    }
+
+    /* Efeitos nos pools */
+    .bpmn-diagram svg rect[fill="#eaf4fb"] {
+      filter: drop-shadow(0 2px 4px rgba(1, 66, 122, 0.1));
+      transition: all 0.3s ease;
+    }
+
+    .bpmn-diagram svg rect[fill="#eaf4fb"]:hover {
+      filter: drop-shadow(0 4px 8px rgba(1, 66, 122, 0.2));
+    }
+    
+    /* Tooltip interativo */
+    .tooltip {
+      position: absolute;
+      background: rgba(1, 66, 122, 0.95);
+      color: white;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      max-width: 300px;
+      z-index: 1000;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.3s;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+    
+    .tooltip.show {
+      opacity: 1;
+    }
+    
+    /* Painel de detalhes */
+    .details-panel {
+      background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+      border: 3px solid #01427a;
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px 0;
+      box-shadow: 0 20px 60px rgba(1, 66, 122, 0.15);
+      display: none;
+      animation: slideDown 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .details-panel::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 5px;
+      background: linear-gradient(90deg, #01427a, #1976d2, #4caf50, #ff9800, #f44336);
+    }
+    
+    .details-panel.show {
+      display: block;
+    }
+    
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-30px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .details-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 3px solid #eaf4fb;
+      position: relative;
+    }
+    
+    .details-header::after {
+      content: '';
+      position: absolute;
+      bottom: -3px;
+      left: 0;
+      width: 60px;
+      height: 3px;
+      background: linear-gradient(90deg, #01427a, #1976d2);
+    }
+    
+    .details-title {
+      color: #01427a;
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(1, 66, 122, 0.1);
+    }
+    
+    .close-details {
+      background: linear-gradient(135deg, #dc3545, #c82333);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+    
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .sidebar { 
+        transform: translateX(-100%); 
+        transition: transform 0.3s ease; 
+        z-index: 1000; 
+      }
+      .sidebar.open { transform: translateX(0); }
+      .main-content { margin-left: 0; }
+      .mobile-menu-toggle { 
+        display: block; 
+        position: fixed; 
+        top: 20px; 
+        left: 20px; 
+        z-index: 1001; 
+        background: #01427a; 
+        color: white; 
+        border: none; 
+        padding: 10px; 
+        border-radius: 5px; 
+        cursor: pointer; 
+      }
+    }
+    
+    .close-details:hover {
+      background: #c82333;
+    }
+    
+    .details-content {
+      color: #333;
+      line-height: 1.7;
+    }
+    
+    .details-section {
+      margin-bottom: 25px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #e9ecef;
+      transition: all 0.3s ease;
+    }
+    
+    .details-section:hover {
+      background: rgba(255, 255, 255, 0.9);
+      box-shadow: 0 4px 12px rgba(1, 66, 122, 0.1);
+      transform: translateY(-2px);
+    }
+    
+    .details-section h4 {
+      color: #01427a;
+      font-size: 18px;
+      font-weight: 600;
+      margin: 0 0 15px 0;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, #eaf4fb, #f0f8ff);
+      border-radius: 10px;
+      border-left: 5px solid #01427a;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .details-section p {
+      margin: 12px 0;
+      line-height: 1.7;
+      color: #495057;
+    }
+    
+    .details-section ul {
+      margin: 12px 0;
+      padding-left: 0;
+      list-style: none;
+    }
+    
+    .details-section li {
+      margin: 10px 0;
+      line-height: 1.6;
+      padding: 8px 12px;
+      background: rgba(1, 66, 122, 0.05);
+      border-radius: 6px;
+      border-left: 3px solid #01427a;
+      transition: all 0.3s ease;
+    }
+    
+    .details-section li:hover {
+      background: rgba(1, 66, 122, 0.1);
+      transform: translateX(5px);
+    }
+    
+    .details-section li strong {
+      color: #01427a;
+      font-weight: 600;
+    }
+    
+    /* Animações para fluxos */
+    .flow-path {
+      stroke-dasharray: 5;
+      animation: flowAnimation 2s infinite linear;
+    }
+    
+    @keyframes flowAnimation {
+      to {
+        stroke-dashoffset: -10;
+      }
+    }
+    
+    /* Responsividade para diferentes tamanhos de tela */
+    @media (max-width: 1200px) {
+      .bpmn-diagram svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .bpmn-diagram {
+        margin: 20px 0;
+        padding: 15px 0;
+      }
+      .bpmn-diagram svg {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+      }
+      #bpmn-container {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+      }
+    }
+    
+    @media (max-width: 600px) {
+      .container {
+        padding: 14px 8px;
+      }
+      .bpmn-diagram {
+        margin: 15px 0;
+        padding: 10px 0;
+      }
+      .bpmn-diagram svg {
+        width: 100% !important;
+        height: auto !important;
+        max-width: 100% !important;
+      }
+      #bpmn-container {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+      }
+    }
+    
+    /* Framework de Maturidade */
+    .framework-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 25px;
+      margin: 30px 0;
+    }
+    
+    .estagio {
+      background: white;
+      border: 2px solid #e0e0e0;
+      border-radius: 15px;
+      padding: 25px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+    
+    .estagio:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    .estagio.completo {
+      border-color: #4caf50;
+      background: linear-gradient(135deg, #f8fff8 0%, #ffffff 100%);
+    }
+    
+    .estagio.em-andamento {
+      border-color: #ff9800;
+      background: linear-gradient(135deg, #fff8f0 0%, #ffffff 100%);
+    }
+    
+    .estagio-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 2px solid #f0f0f0;
+    }
+    
+    .estagio-numero {
+      width: 40px;
+      height: 40px;
+      background: #01427a;
+      color: white;
+      border-radius: 50%;
+      display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        font-size: 18px;
+    }
+    
+    .estagio-header h3 {
+      margin: 0;
+      flex: 1;
+      color: #01427a;
+    }
+    
+    .estagio-status {
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+    
+    .estagio-status.nao-iniciado {
+      background: #f5f5f5;
+      color: #666;
+    }
+    
+    .estagio-status.em-andamento {
+      background: #fff3e0;
+      color: #f57c00;
+    }
+    
+    .estagio-status.completo {
+      background: #e8f5e8;
+      color: #388e3c;
+    }
+    
+    .estagio-content p {
+      margin-bottom: 20px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+    
+    .checklist-estagio, .estagio-beneficios {
+      margin-bottom: 20px;
+    }
+    
+    .checklist-estagio h4, .estagio-beneficios h4 {
+      color: #01427a;
+      margin-bottom: 10px;
+      font-size: 16px;
+    }
+    
+    .checklist-estagio ul, .estagio-beneficios ul {
+      margin: 0;
+      padding-left: 20px;
+    }
+    
+    .checklist-estagio li, .estagio-beneficios li {
+      margin: 8px 0;
+      padding: 8px 12px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 3px solid #01427a;
+      transition: all 0.3s ease;
+    }
+    
+    .checklist-estagio li.completo {
+      background: #e8f5e8;
+      border-left-color: #4caf50;
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+    
+    .checklist-estagio li:hover {
+      background: #e3f2fd;
+      transform: translateX(5px);
+    }
+    
+    /* Painel de Controle */
+    .painel-controle {
+      background: linear-gradient(135deg, #01427a 0%, #0a5fa7 100%);
+      color: white;
+      padding: 30px;
+      border-radius: 15px;
+      margin: 40px 0;
+      box-shadow: 0 8px 25px rgba(1, 66, 122, 0.3);
+    }
+    
+    .painel-controle h3 {
+      color: white;
+      margin-top: 0;
+      text-align: center;
+      font-size: 24px;
+    }
+    
+    .status-overview {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin: 25px 0;
+    }
+    
+    .status-item {
+      background: rgba(255,255,255,0.1);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+    
+    .status-label {
+      display: block;
+      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 8px;
+    }
+    
+    .status-value {
+      display: block;
+      font-size: 18px;
+      font-weight: bold;
+      color: #ffb200;
+    }
+    
+    .acoes-rapidas {
+      text-align: center;
+      margin-top: 30px;
+    }
+    
+    .acoes-rapidas h4 {
+      color: white;
+      margin-bottom: 20px;
+      font-size: 18px;
+    }
+    
+    .btn-estagio, .btn-reset {
+      background: #ffb200;
+      color: #01427a;
+      border: none;
+      padding: 12px 20px;
+      margin: 5px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      font-size: 14px;
+    }
+    
+    .btn-estagio:hover {
+      background: #ffc107;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(255, 178, 0, 0.4);
+    }
+    
+    .btn-reset {
+      background: #f44336;
+      color: white;
+    }
+    
+    .btn-reset:hover {
+      background: #d32f2f;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(244, 67, 54, 0.4);
+    }
+    
+    /* Player de vídeo */
+    .video-container {
+      position: relative;
+      width: 100%;
+      max-width: 800px;
+      margin: 20px auto;
+      background: #000;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    
+    .video-player {
+      width: 100%;
+      height: 450px;
+      border: none;
+      outline: none;
+    }
+    
+    .video-info {
+      background: #f8f9fa;
+      padding: 15px;
+      border-radius: 0 0 10px 10px;
+    }
+    
+    .video-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #01427a;
+      margin: 0 0 8px 0;
+    }
+    
+    .video-description {
+      color: #666;
+      font-size: 14px;
+      margin: 0;
+    }
+    
+    .video-duration {
+      color: #888;
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin: 20px 0;
+    }
+    
+    .video-card {
+      background: #fff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border: 1px solid #e0e0e0;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .video-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    
+    .video-card h4 {
+      color: #01427a;
+      margin: 0 0 10px 0;
+      font-size: 16px;
+    }
+    
+    .video-card p {
+      color: #666;
+      font-size: 14px;
+      margin: 0 0 10px 0;
+    }
+    
+    .video-card .video-link {
+      display: inline-block;
+      background: #01427a;
+      color: white;
+      padding: 8px 16px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-size: 14px;
+      transition: background 0.3s ease;
+    }
+    
+    .video-card .video-link:hover {
+      background: #0a5fa7;
+    }
+
+    /* Modal de Zoom para Imagens */
+    .image-zoom-modal {
+      display: none;
+      position: fixed;
+      z-index: 10000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.9);
+      cursor: pointer;
+    }
+    
+    .image-zoom-modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      animation: fadeIn 0.3s ease;
+    }
+    
+    .zoom-content {
+      max-width: 95%;
+      max-height: 95%;
+      object-fit: contain;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+    }
+    
+    .zoom-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 10001;
+      transition: color 0.3s;
+    }
+    
+    .zoom-close:hover {
+      color: #ffb200;
+    }
+    
+    .zoom-info {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      color: white;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px 20px;
+      border-radius: 20px;
+      font-size: 14px;
+      text-align: center;
+    }
+    
+    /* Cursor de zoom para imagens */
+    .zoomable-image {
+      cursor: zoom-in;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    
+    .zoomable-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 25px rgba(1, 66, 122, 0.3);
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Responsivo */
+    @media (max-width: 768px) {
+      .framework-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .status-overview {
+        grid-template-columns: 1fr;
+      }
+      
+      .acoes-rapidas button {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+      }
+      
+      .zoom-close {
+        top: 10px;
+        right: 15px;
+        font-size: 30px;
+      }
+      
+      .zoom-info {
+        bottom: 10px;
+        font-size: 12px;
+        padding: 8px 15px;
+      }
+    }
+  </style>
+  
+  <script>
+    // Função para navegar para seções
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: 'smooth' });
+        
+        // Atualizar menu ativo
+        updateActiveMenu(sectionId);
+        
+        // Fechar menu mobile se estiver aberto
+        if (window.innerWidth <= 768) {
+          document.getElementById('sidebar').classList.remove('open');
+        }
+      }
+    }
+    
+    // Função para atualizar menu ativo
+    function updateActiveMenu(activeId) {
+      // Remover classe ativa de todos os links
+      document.querySelectorAll('.nav-menu a').forEach(link => {
+        link.classList.remove('active');
+      });
+      
+      // Adicionar classe ativa ao link clicado
+      const activeLink = document.querySelector(`[href="#${activeId}"]`);
+      if (activeLink) {
+        activeLink.classList.add('active');
+      }
+    }
+    
+    // Função para toggle do menu mobile
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
+    }
+    
+    // Detectar seção ativa no scroll
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.section');
+      const scrollPos = window.scrollY + 100;
+      
+      sections.forEach(section => {
+        const sectionTop = section.offsetTop;
+        const sectionHeight = section.offsetHeight;
+        const sectionId = section.id;
+        
+        if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+          updateActiveMenu(sectionId);
+        }
+      });
+    });
+    
+    // Marcar primeiro capítulo como ativo por padrão
+    document.addEventListener('DOMContentLoaded', () => {
+      updateActiveMenu('capitulo1');
+      inicializarFramework();
+      initializeImageZoom();
+    });
+    
+    // Framework de Maturidade
+    let progressoEstagios = {
+      1: { status: 'nao-iniciado', progresso: 0 },
+      2: { status: 'nao-iniciado', progresso: 0 },
+      3: { status: 'nao-iniciado', progresso: 0 },
+      4: { status: 'nao-iniciado', progresso: 0 },
+      5: { status: 'nao-iniciado', progresso: 0 }
+    };
+    
+    function inicializarFramework() {
+      // Carregar progresso salvo
+      const progressoSalvo = localStorage.getItem('fortesBPMProgresso');
+      if (progressoSalvo) {
+        progressoEstagios = JSON.parse(progressoSalvo);
+        atualizarInterfaceFramework();
+      }
+    }
+    
+    function marcarEstagioCompleto(numeroEstagio) {
+      progressoEstagios[numeroEstagio].status = 'completo';
+      progressoEstagios[numeroEstagio].progresso = 100;
+      
+      // Salvar no localStorage
+      localStorage.setItem('fortesBPMProgresso', JSON.stringify(progressoEstagios));
+      
+      // Atualizar interface
+      atualizarInterfaceFramework();
+      
+      // Mostrar confirmação
+      mostrarConfirmacao(`Estágio ${numeroEstagio} marcado como completo! 🎉`);
+    }
+    
+    function atualizarInterfaceFramework() {
+      // Atualizar cada estágio
+      for (let i = 1; i <= 5; i++) {
+        const estagio = document.querySelector(`[data-estagio="${i}"]`);
+        const statusElement = document.getElementById(`status-${i}`);
+        
+        if (estagio && statusElement) {
+          // Remover classes anteriores
+          estagio.classList.remove('completo', 'em-andamento');
+          statusElement.className = 'estagio-status';
+          
+          // Aplicar novo status
+          if (progressoEstagios[i].status === 'completo') {
+            estagio.classList.add('completo');
+            statusElement.classList.add('completo');
+            statusElement.textContent = '✅ Completo';
+          } else if (progressoEstagios[i].status === 'em-andamento') {
+            estagio.classList.add('em-andamento');
+            statusElement.classList.add('em-andamento');
+            statusElement.textContent = '🔄 Em Andamento';
+          } else {
+            statusElement.classList.add('nao-iniciado');
+            statusElement.textContent = '❌ Não Iniciado';
+          }
+        }
+      }
+      
+      // Atualizar painel de controle
+      atualizarPainelControle();
+    }
+    
+    function atualizarPainelControle() {
+      const estagiosCompletos = Object.values(progressoEstagios).filter(e => e.status === 'completo').length;
+      const progressoGeral = Math.round((estagiosCompletos / 5) * 100);
+      
+      // Encontrar próximo estágio
+      let proximoEstagio = 1;
+      for (let i = 1; i <= 5; i++) {
+        if (progressoEstagios[i].status !== 'completo') {
+          proximoEstagio = i;
+          break;
+        }
+      }
+      
+      // Atualizar valores
+      document.getElementById('estagio-atual').textContent = `${proximoEstagio} - ${getNomeEstagio(proximoEstagio)}`;
+      document.getElementById('progresso-geral').textContent = `${progressoGeral}%`;
+      document.getElementById('proximo-passo').textContent = getProximoPasso(proximoEstagio);
+    }
+    
+    function getNomeEstagio(numero) {
+      const nomes = {
+        1: 'Diagnóstico Inicial',
+        2: 'Mapeamento de Processos',
+        3: 'Levantamento de Requisitos',
+        4: 'Registro de Gargalos',
+        5: 'Validação com Áreas'
+      };
+      return nomes[numero] || 'Desconhecido';
+    }
+    
+    function getProximoPasso(numero) {
+      const passos = {
+        1: 'Iniciar Diagnóstico',
+        2: 'Começar Mapeamento',
+        3: 'Levantar Requisitos',
+        4: 'Identificar Gargalos',
+        5: 'Validar com Áreas'
+      };
+      return passos[numero] || 'Finalizar';
+    }
+    
+    function resetarProgresso() {
+      if (confirm('Tem certeza que deseja resetar todo o progresso?')) {
+        progressoEstagios = {
+          1: { status: 'nao-iniciado', progresso: 0 },
+          2: { status: 'nao-iniciado', progresso: 0 },
+          3: { status: 'nao-iniciado', progresso: 0 },
+          4: { status: 'nao-iniciado', progresso: 0 },
+          5: { status: 'nao-iniciado', progresso: 0 }
+        };
+        
+        localStorage.removeItem('fortesBPMProgresso');
+        atualizarInterfaceFramework();
+        mostrarConfirmacao('Progresso resetado com sucesso! 🔄');
+      }
+    }
+    
+    function mostrarConfirmacao(mensagem) {
+      // Criar notificação
+      const notificacao = document.createElement('div');
+      notificacao.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #4caf50;
+        color: white;
+        padding: 15px 25px;
+        border-radius: 10px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        z-index: 10000;
+        animation: slideIn 0.3s ease;
+      `;
+      notificacao.textContent = mensagem;
+      
+      document.body.appendChild(notificacao);
+      
+      // Remover após 3 segundos
+      setTimeout(() => {
+        notificacao.style.animation = 'slideOut 0.3s ease';
+        setTimeout(() => {
+          document.body.removeChild(notificacao);
+        }, 300);
+      }, 3000);
+    }
+    
+    // Adicionar animações CSS
+    const style = document.createElement('style');
+    style.textContent = `
+      @keyframes slideIn {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+      }
+      @keyframes slideOut {
+        from { transform: translateX(0); opacity: 1; }
+        to { transform: translateX(100%); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</head>
+<body>
+  <!-- Botão mobile para menu -->
+  <button class="mobile-menu-toggle" onclick="toggleSidebar()" style="display: none;">☰</button>
+  
+  <div class="page-wrapper">
+    <!-- Menu lateral -->
+    <nav class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <h3>📚 Guia BPM</h3>
+        <a href="https://fortes.ind.br/" target="_blank" rel="noopener noreferrer" class="link-custom"><p>Fortes Engenharia</p></a>
+      </div>
+      
+      <ul class="nav-menu">
+        <li><a href="#capitulo1" onclick="scrollToSection('capitulo1')">1. Conceitos Fundamentais</a></li>
+        <li><a href="#capitulo2" onclick="scrollToSection('capitulo2')">2. Diagnóstico Inicial</a></li>
+        <li><a href="#capitulo3" onclick="scrollToSection('capitulo3')">3. Mapeamento de Processo</a></li>
+        <li><a href="#capitulo4" onclick="scrollToSection('capitulo4')">4. Levantamento de Requisitos</a></li>
+        <li><a href="#capitulo5" onclick="scrollToSection('capitulo5')">5. Registro de Gargalos</a></li>
+        <li><a href="#capitulo6" onclick="scrollToSection('capitulo6')">6. Validação com Áreas</a></li>
+        <li><a href="#capitulo7" onclick="scrollToSection('capitulo7')">7. Ferramentas Recomendadas</a></li>
+        <li><a href="#capitulo8" onclick="scrollToSection('capitulo8')">8. Documentos e Templates</a></li>
+        <li><a href="#capitulo9" onclick="scrollToSection('capitulo9')">9. Implementação Fusion Platform</a></li>
+        <li><a href="#videos-treinamento" onclick="scrollToSection('videos-treinamento')">🎥 Treinamento em Vídeo</a></li>
+        <li><a href="#framework-maturidade" onclick="scrollToSection('framework-maturidade')">🔍 Framework de Maturidade</a></li>
+      </ul>
+    </nav>
+    
+    <!-- Conteúdo principal -->
+    <main class="main-content">
+      <div class="container">
+        <h1>Guia Prático de BPM</h1>
+    
+    <div class="section" id="capitulo1">
+      <h2>1. Conceitos Fundamentais de BPM e Metodologias</h2>
+      <div class="exemplo">
+        <strong>BPM (Business Process Management):</strong> Abordagem para identificar, desenhar, executar, monitorar e otimizar processos de negócio. Foco em eficiência, redução de custos, conformidade e experiência do cliente.
+      </div>
+      <div class="destaque">
+        <strong>Por que BPM antes do BPMS?</strong><br>
+        O BPMS automatiza processos, mas sem clareza sobre o que automatizar, há risco de digitalizar ineficiências. O BPM prepara o terreno para uma automação inteligente e eficiente.
+      </div>
+      <div class="metodologia">
+        <strong>Metodologias de Processos de Negócio mais utilizadas:</strong>
+        <ul>
+          <li><strong>BPMN:</strong> Modela visualmente processos. Use para mapear fluxos como aprovação de orçamento, compras, integração de áreas.</li>
+          <li><strong>Lean:</strong> Elimina desperdícios e agiliza etapas. Use para identificar etapas desnecessárias em processos de obra, suprimentos e administrativos.</li>
+          <li><strong>Six Sigma:</strong> Reduz defeitos e variações. Aplique em processos críticos como medições, entregas e controle de materiais.</li>
+          <li><strong>PDCA:</strong> Ciclo de melhoria contínua. Use para revisar e aprimorar processos periodicamente.</li>
+        </ul>
+      </div>
+      <div class="evolucao">
+        <strong>Processo Exemplo:</strong>
+        <br>
+        <strong>Solicitação e Aprovação de Compra de Materiais para Obra</strong><br>
+        Este processo é vital para garantir que as obras tenham os materiais necessários no prazo, com controle e agilidade. Ao longo dos capítulos, veremos como ele pode ser mapeado, melhorado e automatizado.
+      </div>
+    </div>
+    
+    <div class="section" id="capitulo2">
+      <h2>2. Diagnóstico Inicial</h2>
+      <div class="subtitulo">Exemplo de Cadeia de Valor para Engenharia</div>
+      <ul>
+        <li><strong>Atividades Primárias:</strong> Prospecção de clientes, elaboração de propostas, execução de obras, gestão de contratos, entrega e pós-venda.</li>
+        <li><strong>Atividades de Suporte:</strong> RH, Financeiro, Suprimentos, TI.</li>
+      </ul>
+      <div class="template">
+        <strong>Modelo de Entrevista para Diagnóstico:</strong>
+        <ol>
+          <li>Qual sua função e principais responsabilidades?</li>
+          <li>Quais processos você executa ou participa?</li>
+          <li>Quais são as maiores dificuldades no dia a dia?</li>
+          <li>Onde ocorrem atrasos ou retrabalho?</li>
+          <li>Que informações/documentos são essenciais para seu trabalho?</li>
+          <li>Como você acredita que o processo poderia ser melhorado?</li>
+          <li>Existe algum sistema ou ferramenta que você gostaria de sugerir?</li>
+        </ol>
+      </div>
+      <div class="checklist">
+        <strong>Checklist Diagnóstico:</strong>
+        <ul>
+          <li>Identificou todos os processos principais?</li>
+          <li>Listou stakeholders internos e externos?</li>
+          <li>Entendeu o fluxo básico de cada processo?</li>
+          <li>Identificou objetivos estratégicos da empresa?</li>
+        </ul>
+      </div>
+      <div class="metodologia">
+        <strong>Metodologias para Diagnóstico e Mapeamento:</strong>
+        <ul>
+          <li><strong>Lean:</strong> Use para entrevistas e identificar desperdícios/gargalos.</li>
+          <li><strong>BPMN:</strong> Workshops para desenhar o fluxo AS IS e TO BE.</li>
+          <li><strong>Six Sigma:</strong> Avalie valor agregado e causas de problemas.</li>
+        </ul>
+      </div>
+      <div class="evolucao">
+        <strong>Diagnóstico do Processo Exemplo:</strong>
+        <ul>
+          <li><strong>Dificuldades:</strong> Solicitações feitas por e-mail ou papel, aprovações lentas, falta de rastreabilidade.</li>
+          <li><strong>Impactos:</strong> Obras paradas aguardando material, compras emergenciais mais caras.</li>
+          <li><strong>Oportunidades:</strong> Padronizar, automatizar e monitorar o processo.</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="section" id="capitulo3">
+      <h2>3. Mapeamento de Processo (BPMN)</h2>
+      <div class="subtitulo">Exemplo BPMN: Solicitação e Aprovação de Compra de Materiais para Obra</div>
+      <div class="exemplo">
+        <strong>Descrição do Processo:</strong><br>
+        Obra solicita compra &rarr; Coordenador de compras analisa &rarr; Diretor aprova &rarr; Pedido enviado ao fornecedor.
+      </div>
+             <div class="template bpmn-diagram">
+         <strong style="display: block; text-align: center; margin-bottom: 10px;">Diagrama BPMN Interativo - Fluxo Sem Sobreposição:</strong>
+         <p style="text-align: center; margin-bottom: 15px; color: #666; font-size: 14px;">
+           💡 Clique nos elementos para ver detalhes • Passe o mouse para tooltips
+         </p>
+         
+         <div id="bpmn-container" role="main" aria-label="Diagrama BPMN de processo de engenharia" style="width: 100%; max-width: 100%; overflow: hidden;">
+           <svg
+             role="img"
+             aria-describedby="diagram-description"
+             viewBox="0 0 1200 520"
+             preserveAspectRatio="xMidYMid meet"
+             tabindex="0"
+             style="display: block; margin: 0 auto; width: 100%; max-width: 100%; height: auto;"
+           >
+             <desc id="diagram-description">
+               Diagrama BPMN com 4 raias: Obra, Compras, Diretoria, Controle. Fluxo de cotação sem sobreposição.
+             </desc>
+
+             <defs>
+               <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+                 <path d="M0,0 L8,4 L0,8 L2,4 Z" fill="#01305a" />
+               </marker>
+               <marker id="arrow-approved" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+                 <path d="M0,0 L8,4 L0,8 L2,4 Z" fill="#4caf50" />
+               </marker>
+               <marker id="arrow-rejected" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="strokeWidth">
+                 <path d="M0,0 L8,4 L0,8 L2,4 Z" fill="#f44336" />
+               </marker>
+             </defs>
+          
+             <!-- Pools -->
+             <rect class="pool" x="10" y="10" width="1180" height="110" fill="#e6ecf5" stroke="#01305a" stroke-width="1.5" rx="10" ry="10"/>
+             <text class="pool-label" x="30" y="65" dominant-baseline="middle" fill="#01305a" font-weight="600" font-size="18">Obra</text>
+
+             <rect class="pool" x="10" y="140" width="1180" height="110" fill="#e6ecf5" stroke="#01305a" stroke-width="1.5" rx="10" ry="10"/>
+             <text class="pool-label" x="30" y="195" dominant-baseline="middle" fill="#01305a" font-weight="600" font-size="18">Compras</text>
+
+             <rect class="pool" x="10" y="270" width="1180" height="110" fill="#e6ecf5" stroke="#01305a" stroke-width="1.5" rx="10" ry="10"/>
+             <text class="pool-label" x="30" y="325" dominant-baseline="middle" fill="#01305a" font-weight="600" font-size="18">Diretoria</text>
+
+             <rect class="pool" x="10" y="400" width="1180" height="110" fill="#e6ecf5" stroke="#01305a" stroke-width="1.5" rx="10" ry="10"/>
+             <text class="pool-label" x="30" y="455" dominant-baseline="middle" fill="#01305a" font-weight="600" font-size="18">Controle</text>
+          
+             <!-- Evento de Início -->
+             <circle
+               class="event start"
+               cx="100"
+               cy="65"
+               r="22"
+               tabindex="0"
+               role="button"
+               aria-label="Evento de Início"
+               data-id="startEvent"
+               fill="#4caf50"
+               stroke="#388e3c"
+               stroke-width="2"
+             ></circle>
+             <text x="100" y="65" text-anchor="middle" fill="#fff" font-weight="600" font-size="16" dominant-baseline="middle" pointer-events="none">Início</text>
+
+             <!-- Tarefa: Criar Solicitação -->
+             <rect
+               class="task"
+               x="180"
+               y="40"
+               width="140"
+               height="50"
+               tabindex="0"
+               role="button"
+               aria-label="Criar Solicitação"
+               data-id="taskCriarSolicitacao"
+               rx="8"
+               ry="8"
+               fill="#01305a"
+               stroke="#01305a"
+               stroke-width="1.5"
+             ></rect>
+             <text x="250" y="65" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" dominant-baseline="middle" pointer-events="none">Criar Solicitação</text>
+
+            <!-- Tarefa: Analisar Demanda -->
+            <rect
+              class="task"
+              x="360"
+              y="170"
+              width="140"
+              height="50"
+              tabindex="0"
+              role="button"
+              aria-label="Analisar Demanda"
+              data-id="taskAnalisarDemanda"
+              rx="8"
+              ry="8"
+              fill="#01305a"
+              stroke="#01305a"
+              stroke-width="1.5"
+            ></rect>
+            <text x="430" y="195" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" dominant-baseline="middle" pointer-events="none">Analisar Demanda</text>
+
+             <!-- Tarefa: Enviar Cotação -->
+             <rect
+               class="task"
+               x="540"
+               y="170"
+               width="140"
+               height="50"
+               tabindex="0"
+               role="button"
+               aria-label="Enviar Cotação"
+               data-id="taskEnviarCotacao"
+               rx="8"
+               ry="8"
+               fill="#01305a"
+               stroke="#01305a"
+               stroke-width="1.5"
+             ></rect>
+             <text x="610" y="195" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" dominant-baseline="middle" pointer-events="none">Enviar Cotação</text>
+
+             <!-- Tarefa: Aprovar Compra -->
+             <rect
+               class="task"
+               x="720"
+               y="300"
+               width="140"
+               height="50"
+               tabindex="0"
+               role="button"
+               aria-label="Aprovar Compra"
+               data-id="taskAprovarCompra"
+               rx="8"
+               ry="8"
+               fill="#01305a"
+               stroke="#01305a"
+               stroke-width="1.5"
+             ></rect>
+             <text x="790" y="325" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" dominant-baseline="middle" pointer-events="none">Aprovar Compra</text>
+
+             <!-- GATEWAY ÚNICO - Decisão de Aprovação -->
+             <polygon
+               class="gateway"
+               points="915,300 940,325 915,350 890,325"
+               tabindex="0"
+               role="button"
+               aria-label="Gateway de Aprovação"
+               data-id="gatewayAprovacao"
+               fill="#01305a"
+               stroke="#01305a"
+               stroke-width="1.5"
+             ></polygon>
+             <text x="915" y="325" text-anchor="middle" fill="#fff" font-weight="700" font-size="20" dominant-baseline="middle" pointer-events="none">✕</text>
+
+             <!-- Tarefa: Controlar Qualidade -->
+             <rect
+               class="task"
+               x="980"
+               y="430"
+               width="140"
+               height="50"
+               tabindex="0"
+               role="button"
+               aria-label="Controlar Qualidade"
+               data-id="taskControlarQualidade"
+               rx="8"
+               ry="8"
+               fill="#01305a"
+               stroke="#01305a"
+               stroke-width="1.5"
+             ></rect>
+             <text x="1050" y="455" text-anchor="middle" fill="#fff" font-weight="600" font-size="14" dominant-baseline="middle" pointer-events="none">Controlar Qualidade</text>
+
+             <!-- Evento de Fim -->
+             <circle
+               class="event end"
+               cx="1050"
+               cy="65"
+               r="22"
+               tabindex="0"
+               role="button"
+               aria-label="Evento de Fim"
+               data-id="endEvent"
+               fill="#f44336"
+               stroke="#c62828"
+               stroke-width="2"
+             ></circle>
+             <text x="1050" y="65" text-anchor="middle" fill="#fff" font-weight="600" font-size="16" dominant-baseline="middle" pointer-events="none">Fim</text>
+          
+             <!-- Fluxos Sequenciais -->
+             <!-- Fluxo básico inicial -->
+             <path class="flow" d="M122 65 L180 65" fill="none" stroke="#01305a" stroke-width="2" marker-end="url(#arrow)"/>
+             <path class="flow" d="M320 65 L320 195 L360 195" fill="none" stroke="#01305a" stroke-width="2" marker-end="url(#arrow)"/>
+             
+             <!-- Fluxo para Compras -->
+             <path class="flow" d="M500 195 L540 195" fill="none" stroke="#01305a" stroke-width="2" marker-end="url(#arrow)"/>
+             
+             <!-- FLUXO OTIMIZADO: Cotação → Aprovação (EVITANDO SOBREPOSIÇÃO) -->
+             <!-- Desce da cotação, vai para baixo da linha de retorno, depois sobe para aprovação -->
+             <path class="flow" d="M610 220 L610 260 L790 260 L790 300" fill="none" stroke="#01305a" stroke-width="2" marker-end="url(#arrow)"/>
+             
+             <!-- Fluxo da Aprovação para Gateway -->
+             <path class="flow" d="M860 325 L890 325" fill="none" stroke="#01305a" stroke-width="2" marker-end="url(#arrow)"/>
+             
+             <!-- FLUXO APROVADO: Gateway → Controle -->
+             <path class="flow approved" d="M940 325 L1050 325 L1050 430" marker-end="url(#arrow-approved)" fill="none" stroke="#4caf50" stroke-width="2"/>
+             <text class="flow-label approved" x="995" y="320" text-anchor="middle" dominant-baseline="middle" fill="#4caf50" font-weight="600" font-size="12">APROVADA</text>
+             
+             <!-- FLUXO REJEITADO: Gateway → Compras (MANTIDO EXATAMENTE COMO ESTAVA) -->
+             <path class="flow rejected" d="M915 300 L915 195 L680 195" marker-end="url(#arrow-rejected)" fill="none" stroke="#f44336" stroke-width="2"/>
+             <text class="flow-label rejected" x="800" y="190" text-anchor="middle" dominant-baseline="middle" fill="#f44336" font-weight="600" font-size="12">REPROVADA</text>
+             
+             <!-- FLUXO FINAL: Do Controle para o Fim -->
+             <path class="flow" d="M1050 430 L1050 87" fill="none" stroke="#01305a" stroke-width="2" marker-end="url(#arrow)"/>
+
+           </svg>
+         </div>
+
+         <!-- Tooltip -->
+         <div id="tooltip" role="tooltip" aria-hidden="true" style="position: fixed; pointer-events: none; background: #fff; color: #01305a; padding: 6px 10px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 13px; font-weight: 600; opacity: 0; transition: opacity 0.25s ease; box-shadow: none; max-width: 220px; user-select: none; z-index: 10000;"></div>
+
+         <!-- Painel de Detalhes -->
+         <section id="details-panel" aria-live="polite" aria-hidden="true" tabindex="-1" style="position: fixed; top: 80px; right: 20px; width: 300px; max-width: 90vw; background: #fff; border: 1px solid #d0d7de; border-radius: 12px; padding: 16px; box-shadow: none; font-size: 14px; color: #01305a; transform-origin: top right; transform: scaleY(0); transition: transform 0.3s ease; z-index: 10001; overflow-y: auto; max-height: 70vh;">
+           <button class="close-btn" aria-label="Fechar painel de detalhes" style="position: absolute; top: 12px; right: 12px; background: transparent; border: none; font-size: 20px; color: #01305a; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+           <h2 id="details-title" style="margin-top: 0; font-weight: 700; border-bottom: 1px solid #d0d7de; padding-bottom: 6px; word-break: break-word;">Detalhes do Elemento</h2>
+           <div class="section" style="margin-top: 12px;">
+             <div class="section-title" style="font-weight: 600; margin-bottom: 4px; color: #01305a;">Tipo:</div>
+             <div id="details-type"></div>
+           </div>
+           <div class="section" style="margin-top: 12px;">
+             <div class="section-title" style="font-weight: 600; margin-bottom: 4px; color: #01305a;">Descrição:</div>
+             <div id="details-description"></div>
+           </div>
+           <div class="section" id="details-extra" style="margin-top: 12px;"></div>
+         </section>
+         
+         <!-- Legenda BPMN -->
+          <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+            <h4 style="margin: 0 0 15px 0; color: #01427a; text-align: center;">📋 Legenda BPMN - Símbolos Utilizados</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; font-size: 14px;">
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; background: #4caf50; border-radius: 50%; border: 2px solid #01427a;"></div>
+                <span><strong>Evento Início:</strong> Início do processo</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; background: #f44336; border-radius: 50%; border: 2px solid #01427a;"></div>
+                <span><strong>Evento Fim:</strong> Fim do processo</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 30px; height: 20px; border: 2px solid #01427a; border-radius: 5px; position: relative;">
+                  <div style="position: absolute; top: 2px; left: 2px; width: 8px; height: 8px; background: #01427a; border-radius: 50%;"></div>
+                  <div style="position: absolute; top: 10px; left: 2px; width: 6px; height: 6px; background: #01427a; border-radius: 50%;"></div>
+                </div>
+                <span><strong>Atividade de Usuário:</strong> Trabalho manual</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 30px; height: 20px; border: 2px solid #01427a; border-radius: 5px; position: relative;">
+                  <div style="position: absolute; top: 2px; left: 2px; width: 12px; height: 8px; border: 1.5px solid #01427a;"></div>
+                </div>
+                <span><strong>Atividade de Envio:</strong> Comunicação externa</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 10px;">
+                <div style="width: 20px; height: 20px; background: #fff; border: 2px solid #01427a; transform: rotate(45deg); position: relative;">
+                  <span style="position: absolute; top: -8px; left: 2px; transform: rotate(-45deg); font-weight: bold; color: #01427a;">✕</span>
+                </div>
+                <span><strong>Gateway Exclusivo:</strong> Decisão (sim/não)</span>
+              </div>
+            </div>
+          </div>
+
+       </div>
+      <ul>
+        <li><strong>Pools/Raias:</strong> Obra, Compras, Diretoria, Controle</li>
+        <li><strong>Eventos:</strong> Início (solicitação), Fim (pedido enviado), Fim Final (processo completo)</li>
+        <li><strong>Gateways:</strong> Validação de Orçamento, Verificação de Fornecedor, Gateway de Valor, Aprovação Final</li>
+        <li><strong>Artefatos:</strong> Pedido, documentos anexos, controles de qualidade</li>
+      </ul>
+      <div class="metodologia">
+        <strong>Como aplicar as metodologias:</strong>
+        <ul>
+          <li><strong>BPMN:</strong> Crie diagramas claros e padronizados para o processo.</li>
+          <li><strong>Lean:</strong> Após mapear, elimine etapas desnecessárias e agilize o fluxo.</li>
+          <li><strong>PDCA:</strong> Implemente melhorias e monitore resultados.</li>
+        </ul>
+      </div>
+      <div class="evolucao">
+        <strong>Mapeamento do Processo Exemplo:</strong>
+        <ul>
+          <li><strong>AS IS:</strong> Solicitação feita manualmente, aprovações por e-mail, falta de rastreabilidade.</li>
+          <li><strong>TO BE:</strong> Solicitação via sistema, aprovações automáticas, acompanhamento em tempo real.</li>
+        </ul>
+      </div>
+      <div class="destaque">
+        <strong>Ferramentas Gratuitas para BPMN:</strong>
+        <ul>
+          <li><a href="https://www.bizagi.com/pt/products/bpm-suite/modeler" target="_blank">Bizagi Modeler</a></li>
+          <li><a href="https://camunda.com/download/modeler/" target="_blank">Camunda Modeler</a></li>
+          <li><a href="https://app.diagrams.net/" target="_blank">Draw.io</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="section" id="capitulo4">
+      <h2>4. Levantamento de Requisitos</h2>
+      <div class="template">
+        <strong>Modelo de Entrevista para Requisitos:</strong>
+        <ol>
+          <li>Quais informações você recebe para iniciar o processo?</li>
+          <li>Quem são os responsáveis por cada etapa?</li>
+          <li>Existem aprovações? Quem aprova?</li>
+          <li>Quais documentos/formulários são usados?</li>
+          <li>Onde ocorrem maiores atrasos?</li>
+          <li>Já houve problemas sérios? Quais?</li>
+          <li>O que poderia ser automatizado ou simplificado?</li>
+        </ol>
+      </div>
+      <div class="checklist">
+        <strong>Checklist de Requisitos:</strong>
+        <ul>
+          <li>Entrevistou todos os envolvidos?</li>
+          <li>Coletou exemplos de todos os documentos?</li>
+          <li>Registrou regras de negócio?</li>
+          <li>Listou gargalos e dores relatados?</li>
+        </ul>
+      </div>
+      <div class="metodologia">
+        <strong>Metodologias de Projeto e Requisitos:</strong>
+        <ul>
+          <li><strong>PMBOK:</strong> Estruture projetos de melhoria de processos, defina escopo, cronograma e responsáveis.</li>
+          <li><strong>SCRUM/Kanban:</strong> Organize equipes para implementação de processos, divida entregas em sprints e acompanhe progresso.</li>
+        </ul>
+      </div>
+      <div class="evolucao">
+        <strong>Requisitos do Processo Exemplo:</strong>
+        <ul>
+          <li>Formulário digital de solicitação com campos obrigatórios.</li>
+          <li>Fluxo de aprovação com notificações automáticas.</li>
+          <li>Histórico de todas as solicitações e decisões.</li>
+          <li>Permitir anexar orçamentos e documentos.</li>
+          <li>Indicadores: tempo médio de aprovação, índice de retrabalho.</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="section" id="capitulo5">
+      <h2>5. Registro de Gargalos e Melhorias</h2>
+      <div class="subtitulo">Exemplo Real: Processo de Compras</div>
+      <div class="exemplo">
+        <strong>Gargalo:</strong> Atraso na aprovação de requisições por falta de comunicação entre obra e matriz.<br>
+        <strong>Problema:</strong> Aprovação demora em média 3 dias úteis.<br>
+        <strong>Causa:</strong> Falta de notificação automática; aprovações via e-mail manual.<br>
+        <strong>Impacto:</strong> Obras paradas aguardando material.<br>
+        <strong>Melhoria sugerida:</strong> Workflow automatizado com alertas no BPMS.
+      </div>
+      <div class="metodologia">
+        <strong>Aplicação das metodologias:</strong>
+        <ul>
+          <li><strong>Lean/Six Sigma:</strong> Use ferramentas como Ishikawa, 5 Porquês e análise de causa raiz para identificar e atacar gargalos.</li>
+          <li><strong>PDCA:</strong> Registre melhorias, implemente, monitore e padronize soluções de sucesso.</li>
+        </ul>
+      </div>
+      <div class="evolucao">
+        <strong>Gargalos e Melhorias do Processo Exemplo:</strong>
+        <ul>
+          <li><strong>Gargalo:</strong> Aprovação depende de e-mails, causando atrasos.</li>
+          <li><strong>Melhoria:</strong> Notificação automática e painel de pendências.</li>
+          <li><strong>Gargalo:</strong> Falta de histórico e controle.</li>
+          <li><strong>Melhoria:</strong> Registro digital e indicadores de desempenho.</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="section" id="capitulo6">
+      <h2>6. Validação com as Áreas</h2>
+      <div class="template">
+        <strong>Template de Apresentação do Processo TO BE:</strong>
+        <ul>
+          <li>Requisição aberta na obra via BPMS</li>
+          <li>Notificação automática para responsável na matriz</li>
+          <li>Aprovação/reprovação via sistema, com justificativa</li>
+          <li>Acompanhamento do status em tempo real</li>
+        </ul>
+        <strong>Benefícios Esperados:</strong>
+        <ul>
+          <li>Redução do tempo de aprovação</li>
+          <li>Eliminação de e-mails perdidos</li>
+          <li>Rastreabilidade das decisões</li>
+        </ul>
+        <strong>Perguntas para Feedback:</strong>
+        <ul>
+          <li>O fluxo atende às necessidades?</li>
+          <li>Alguma etapa ficou de fora?</li>
+          <li>Há sugestões de melhoria?</li>
+        </ul>
+      </div>
+      <div class="checklist">
+        <strong>Checklist de Validação:</strong>
+        <ul>
+          <li>Todas as áreas participaram?</li>
+          <li>Feedbacks registrados e analisados?</li>
+          <li>Ajustes realizados?</li>
+          <li>Processo validado está documentado?</li>
+        </ul>
+      </div>
+      <div class="metodologia">
+        <strong>Como validar usando metodologias:</strong>
+        <ul>
+          <li><strong>SCRUM/Kanban:</strong> Sprint reviews para apresentar processos redesenhados e coletar feedbacks.</li>
+          <li><strong>PDCA:</strong> Rodadas de validação e ajustes até atingir consenso.</li>
+        </ul>
+      </div>
+      <div class="evolucao">
+        <strong>Validação do Processo Exemplo:</strong>
+        <ul>
+          <li>Reunião com obra, compras e diretoria para validar etapas e responsabilidades.</li>
+          <li>Ajustes sugeridos: permitir justificativa de reprovação, anexar orçamento alternativo.</li>
+          <li>Processo aprovado e pronto para implementação no BPMS.</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="section" id="capitulo7">
+      <h2>7. Ferramentas Recomendadas</h2>
+      <ul>
+        <li><strong>Modelagem BPMN:</strong> Bizagi Modeler, Camunda Modeler, Draw.io</li>
+        <li><strong>Gestão de Requisitos:</strong> Excel, Google Sheets, Notion, Trello</li>
+        <li><strong>Documentação:</strong> Word, Google Docs, Confluence</li>
+        <li><strong>Comunicação:</strong> Teams, Slack, e-mail corporativo</li>
+        <li><strong>BPMS:</strong> (Nome do BPMS contratado pela FORTES Engenharia)</li>
+      </ul>
+      <div class="metodologia">
+        <strong>Ferramentas para aplicar metodologias:</strong>
+        <ul>
+          <li><strong>BPMN Modeler:</strong> Modelagem visual dos processos.</li>
+          <li><strong>Kanban Boards:</strong> Gestão ágil de tarefas e projetos de melhoria.</li>
+          <li><strong>Planilhas:</strong> Controle de indicadores Lean/Six Sigma.</li>
+        </ul>
+      </div>
+      <div class="evolucao">
+        <strong>Ferramentas para o Processo Exemplo:</strong>
+        <ul>
+          <li>BPMS para automatizar solicitações e aprovações.</li>
+          <li>Kanban/Trello para acompanhar pendências.</li>
+          <li>Planilhas para monitorar indicadores de desempenho.</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="section" id="capitulo8">
+      <h2>8. Exemplos de Documentos e Templates</h2>
+      <div class="template">
+        <strong>Template de Documento de Processo:</strong>
+        <ul>
+          <li><strong>Nome do Processo:</strong> Solicitação e Aprovação de Compra de Materiais para Obra</li>
+          <li><strong>Objetivo:</strong> Garantir agilidade e controle nas aquisições de materiais</li>
+          <li><strong>Responsável:</strong> Coordenador de Compras</li>
+          <li><strong>Stakeholders:</strong> Obras, Matriz, Fornecedores, Diretoria</li>
+          <li><strong>Entradas:</strong> Requisição de Compra</li>
+          <li><strong>Saídas:</strong> Pedido aprovado ou rejeitado</li>
+          <li><strong>Indicadores:</strong> Tempo médio de aprovação, número de retrabalhos</li>
+        </ul>
+      </div>
+      <div class="checklist">
+        <strong>Checklist Geral do Projeto BPM:</strong>
+        <ul>
+          <li>Conceitos de BPM apresentados e compreendidos pela equipe</li>
+          <li>Cadeia de valor mapeada</li>
+          <li>Processos críticos identificados</li>
+          <li>BPMN dos processos AS IS e TO BE desenhados</li>
+          <li>Requisitos levantados e validados</li>
+          <li>Gargalos e melhorias documentados</li>
+          <li>Processo validado pelas áreas</li>
+          <li>Pronto para automação no BPMS</li>
+        </ul>
+      </div>
+      <div class="metodologia">
+        <strong>Resumo Prático para FORTES Engenharia:</strong>
+        <ul>
+          <li>Use <strong>BPMN</strong> para mapear e documentar processos.</li>
+          <li>Aplique <strong>Lean</strong> para simplificar e eliminar desperdícios.</li>
+          <li>Use <strong>Six Sigma</strong> para elevar qualidade e controle.</li>
+          <li>Implemente <strong>PDCA</strong> para garantir melhoria contínua.</li>
+          <li>Gerencie projetos de mudança com <strong>PMBOK</strong> e <strong>SCRUM/Kanban</strong>.</li>
+          <li>Combine metodologias conforme o contexto: processos rotineiros, projetos de obra ou iniciativas de transformação.</li>
+        </ul>
+      </div>
+      <div class="evolucao">
+        <strong>Documentos do Processo Exemplo:</strong>
+        <ul>
+          <li>Formulário padrão de solicitação de compra.</li>
+          <li>Fluxograma BPMN do processo.</li>
+          <li>Checklists de aprovação e recebimento.</li>
+          <li>Relatório de indicadores do processo.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="section" id="capitulo9">
+      <h2>9. Implementação de Processos no Fusion Platform</h2>
+      
+      <div class="destaque">
+        <strong>O que é o Fusion Platform?</strong><br>
+        Plataforma BPMS que transforma os processos mapeados em BPM em soluções digitais automatizadas. Permite criar formulários, fluxos de aprovação, integrações e dashboards de forma visual e intuitiva.
+      </div>
+
+      <div class="evolucao">
+        <strong>Processo Exemplo:</strong><br>
+        <strong>Solicitação de Veículos para Obras e Atividades</strong><br>
+        Este processo é essencial para garantir que as equipes tenham transporte adequado, com controle de custos, disponibilidade e aprovações necessárias.
+      </div>
+
+      <!-- Seção 9.1: Preparação -->
+      <div class="subtitulo">9.1. 📋 Preparação para Implementação</div>
+      
+      <div class="template">
+        <strong>Pré-requisitos Essenciais:</strong>
+        <ul>
+          <li>✅ Processo BPMN validado pelas áreas</li>
+          <li>✅ Formulários e campos definidos</li>
+          <li>✅ Fluxo de aprovações mapeado</li>
+          <li>✅ Usuários e perfis identificados</li>
+          <li>✅ Integrações necessárias listadas</li>
+        </ul>
+      </div>
+
+      <div class="exemplo">
+        <strong>Modelagem Inicial - Processo de Solicitação de Veículos:</strong><br>
+        O processo foi modelado no Fusion Platform com as seguintes atividades principais:
+        <ul>
+          <li><strong>Solicitar Veículo:</strong> Preenchimento da requisição pelo solicitante</li>
+          <li><strong>Analisar Solicitação:</strong> Verificação de disponibilidade e necessidade</li>
+          <li><strong>Análise do Aprovador:</strong> Gateway de decisão para aprovação/reprovação</li>
+          <li><strong>Liberar Veículo:</strong> Confirmação e liberação do veículo aprovado</li>
+          <li><strong>Notificar Solicitante:</strong> Comunicação do resultado da solicitação</li>
+        </ul>
+      </div>
+
+      <div class="bpmn-diagram">
+        <strong style="display: block; text-align: center; margin-bottom: 15px;">🚗 Processo de Solicitação de Veículos - Fusion Platform</strong>
+        
+        <div style="text-align: center; margin: 20px 0;">
+          <img src="images/processo-solicitacao-veiculos.png" 
+               alt="Processo de Solicitação de Veículos no Fusion Platform" 
+               style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+        </div>
+        
+        <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+          💡 Processo modelado no editor visual do Fusion Platform
+        </p>
+        
+        <!-- Legenda das Atividades -->
+        <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+          <h4 style="margin: 0 0 15px 0; color: #01427a; text-align: center;">📋 Atividades do Processo</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; font-size: 14px;">
+            <div><strong>1. Solicitar Veículo:</strong> Preenchimento da requisição</div>
+            <div><strong>2. Analisar Solicitação:</strong> Verificação de disponibilidade</div>
+            <div><strong>3. Análise do Aprovador:</strong> Gateway de decisão</div>
+            <div><strong>4. Liberar Veículo:</strong> Confirmação e liberação</div>
+            <div><strong>5. Notificar Solicitante:</strong> Comunicação do resultado</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção 9.1.1: Criação de Formulários -->
+      <div class="subtitulo">9.1.1. 📝 Criação de Formulários no Fusion Platform</div>
+      
+      <div class="destaque">
+        <strong>Importância dos Formulários:</strong><br>
+        Os formulários são a interface principal entre os usuários e o processo automatizado. Uma boa estruturação facilita o preenchimento, reduz erros e melhora a experiência do usuário.
+      </div>
+
+      <div class="metodologia">
+        <strong>Diretrizes para Criação de Formulários:</strong>
+        
+        <div style="background: #eaf4fb; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #01427a;">
+          <h4 style="margin-top: 0; color: #01427a;">📋 1. Crie uma categoria de formulário condizente com o processo</h4>
+          <p style="margin-bottom: 15px;">A categoria deve refletir claramente a natureza do processo que está sendo criado.</p>
+          <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
+            <strong>Exemplos de Categorias:</strong>
+            <ul style="margin: 10px 0;">
+              <li><strong>Transporte:</strong> Para processos relacionados a veículos, frota, deslocamentos</li>
+              <li><strong>Compras:</strong> Para solicitações de materiais, equipamentos, serviços</li>
+              <li><strong>RH:</strong> Para processos de pessoal, férias, treinamentos</li>
+              <li><strong>Financeiro:</strong> Para aprovações de pagamentos, reembolsos, orçamentos</li>
+              <li><strong>Obras:</strong> Para processos específicos de execução, medições, entregas</li>
+            </ul>
+          </div>
+        </div>
+
+        <div style="background: #f1f8e9; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #388e3c;">
+          <h4 style="margin-top: 0; color: #1b5e20;">🏷️ 2. Nomenclatura dos Formulários</h4>
+          <p style="margin-bottom: 15px;">O formulário deve carregar o nome da categoria e depois seu nome de identificação específico.</p>
+          
+          <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; margin-bottom: 15px;">
+            <strong>Estrutura de Nomenclatura:</strong>
+            <p style="margin: 10px 0;"><code style="background: #f8f9fa; padding: 4px 8px; border-radius: 4px; color: #01427a;">[CATEGORIA] + Nome Específico</code></p>
+            
+            <strong>Exemplos:</strong>
+            <ul style="margin: 10px 0;">
+              <li><strong>[Transporte]</strong> Solicitação de Veículos</li>
+              <li><strong>[Compras]</strong> Requisição de Materiais</li>
+              <li><strong>[RH]</strong> Solicitação de Férias</li>
+              <li><strong>[Financeiro]</strong> Aprovação de Pagamentos</li>
+              <li><strong>[Obras]</strong> Relatório de Medição</li>
+            </ul>
+          </div>
+
+          <div style="background: #fff9e5; padding: 15px; border-radius: 8px; border: 1px solid #ffc107;">
+            <strong>⚠️ Formulário Principal:</strong>
+            <p style="margin: 10px 0;">Quando houver mais de um formulário para o processo, o formulário principal deve ser identificado com o sufixo <strong>'Principal'</strong> além do prefixo e seu nome.</p>
+            
+            <strong>Exemplo com múltiplos formulários:</strong>
+            <ul style="margin: 10px 0;">
+              <li><strong>[Transporte]</strong> Solicitação de Veículos <strong>Principal</strong></li>
+              <li><strong>[Transporte]</strong> Solicitação de Veículos - Aprovação</li>
+              <li><strong>[Transporte]</strong> Solicitação de Veículos - Liberação</li>
+            </ul>
+            
+            <p style="margin: 10px 0; color: #7a5c01;"><strong>Benefício:</strong> Isso facilita futuras manutenções, permitindo identificar rapidamente qual é o formulário de entrada do processo.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="exemplo">
+        <strong>Exemplo Prático - Processo de Solicitação de Veículos:</strong>
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <ul>
+            <li><strong>Categoria:</strong> Transporte</li>
+            <li><strong>Formulário Principal:</strong> [Transporte] Solicitação de Veículos Principal</li>
+            <li><strong>Formulários Secundários:</strong>
+              <ul style="margin-top: 10px;">
+                <li>[Transporte] Solicitação de Veículos - Análise</li>
+                <li>[Transporte] Solicitação de Veículos - Aprovação</li>
+                <li>[Transporte] Solicitação de Veículos - Liberação</li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="bpmn-diagram">
+        <strong style="display: block; text-align: center; margin-bottom: 15px;">📝 Exemplo Visual - Categoria e Título do Formulário</strong>
+        
+        <div style="text-align: center; margin: 20px 0;">
+          <img src="images/formulario_categoria_titulo.png" 
+               alt="Exemplo de como configurar categoria e título do formulário no Fusion Platform" 
+               style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+        </div>
+        
+        <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+          💡 Configuração da categoria e nomenclatura do formulário no Fusion Platform
+        </p>
+        
+        <!-- Legenda da Imagem -->
+        <div style="margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #dee2e6;">
+          <h4 style="margin: 0 0 15px 0; color: #01427a; text-align: center;">📋 Elementos da Configuração</h4>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; font-size: 14px;">
+            <div><strong>Categoria:</strong> Campo que define o agrupamento do formulário</div>
+            <div><strong>Nome do Formulário:</strong> Título específico seguindo a nomenclatura padrão</div>
+            <div><strong>Identificação Principal:</strong> Sufixo "Principal" quando aplicável</div>
+            <div><strong>Organização Visual:</strong> Como aparece na interface do Fusion Platform</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bpmn-diagram">
+        <strong style="display: block; text-align: center; margin-bottom: 15px;">🔖 Código do Formulário - Padrão de Nomenclatura</strong>
+        
+        <div style="text-align: center; margin: 20px 0;">
+          <img src="images/formulario_codigo.png" 
+               alt="Exemplo de como configurar o código do formulário no Fusion Platform" 
+               style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+        </div>
+        
+        <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+          💡 Configuração do código do formulário seguindo padrões estabelecidos
+        </p>
+        
+        <!-- Regras para Código do Formulário -->
+        <div style="margin: 20px 0; padding: 20px; background: #fff9e5; border-radius: 10px; border-left: 4px solid #ffb200;">
+          <h4 style="margin-top: 0; color: #7a5c01; text-align: center;">📏 Regras para Código do Formulário</h4>
+          
+          <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #ffc107; margin: 15px 0;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; font-size: 14px;">
+              <div>
+                <strong style="color: #01427a;">🏷️ 1. Prefixo Obrigatório:</strong>
+                <p style="margin: 8px 0;">O código deve começar com <strong>FRM</strong></p>
+                <div style="background: #f8f9fa; padding: 8px; border-radius: 4px; font-family: monospace;">
+                  <strong>Exemplo:</strong> FRM + TRPSOLVLV
+                </div>
+              </div>
+              
+              <div>
+                <strong style="color: #01427a;">📐 2. Limite de Caracteres:</strong>
+                <p style="margin: 8px 0;">Máximo de <strong>12 caracteres</strong> no total</p>
+                <div style="background: #f8f9fa; padding: 8px; border-radius: 4px; font-family: monospace;">
+                  <strong>Exemplo:</strong> FRMTRPSOLVLV (12 chars)
+                </div>
+              </div>
+              
+              <div>
+                <strong style="color: #01427a;">🔤 3. Formato de Texto:</strong>
+                <p style="margin: 8px 0;">Todas as letras em <strong>MAIÚSCULA</strong></p>
+                <div style="background: #f8f9fa; padding: 8px; border-radius: 4px; font-family: monospace;">
+                  <strong>Correto:</strong> FRMTRPSOLVLV<br>
+                  <strong>Incorreto:</strong> frmtrpsolvlv
+                </div>
+              </div>
+              
+              <div>
+                <strong style="color: #01427a;">🎯 4. Referência ao Formulário:</strong>
+                <p style="margin: 8px 0;">Caracteres devem <strong>remeter ao formulário</strong></p>
+                <div style="background: #f8f9fa; padding: 8px; border-radius: 4px; font-family: monospace;">
+                  <strong>TRP:</strong> Transporte<br>
+                  <strong>SOLVLV:</strong> Solicitar Veículo Leve
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border: 1px solid #4caf50; margin: 15px 0;">
+            <h4 style="margin-top: 0; color: #1b5e20;">✅ Exemplos de Códigos Corretos:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 10px; font-size: 14px;">
+              <div><code style="background: #f8f9fa; padding: 4px 8px; border-radius: 4px;">FRMTRPSOLVLV</code> - Transporte Solicitar Veículo Leve</div>
+              <div><code style="background: #f8f9fa; padding: 4px 8px; border-radius: 4px;">FRMCMPMATOBR</code> - Compras Material Obra</div>
+              <div><code style="background: #f8f9fa; padding: 4px 8px; border-radius: 4px;">FRMRHSOLFER</code> - RH Solicitação Férias</div>
+              <div><code style="background: #f8f9fa; padding: 4px 8px; border-radius: 4px;">FRMFINAPPAG</code> - Financeiro Aprovação Pagamento</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bpmn-diagram">
+        <strong style="display: block; text-align: center; margin-bottom: 15px;">📝 Campos do Formulário - Estrutura e Configuração</strong>
+        
+        <div style="text-align: center; margin: 20px 0;">
+          <img src="images/campos_formulario.png" 
+               alt="Exemplo dos campos do formulário no Fusion Platform" 
+               style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+        </div>
+        
+        <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+          💡 Estrutura dos campos do formulário principal no processo
+        </p>
+        
+        <!-- Explicações sobre Campos do Formulário -->
+        <div style="margin: 20px 0; padding: 20px; background: #e3f1ff; border-radius: 10px; border-left: 4px solid #1976d2;">
+          <h4 style="margin-top: 0; color: #0d47a1; text-align: center;">📋 Diretrizes para Campos do Formulário</h4>
+          
+          <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #1976d2; margin: 15px 0;">
+            <div style="margin-bottom: 20px;">
+              <strong style="color: #01427a;">🔄 1. Utilização dos Campos no Processo:</strong>
+              <p style="margin: 8px 0;">Os campos do formulário principal serão utilizados ao longo de todo o processo e serão selecionados como <strong>editáveis</strong> e/ou <strong>obrigatórios</strong> nas atividades da modelagem criada.</p>
+              <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin: 10px 0;">
+                <strong>Exemplo:</strong> O campo "Solicitante Atual" pode ser obrigatório na primeira atividade e apenas visualizável nas atividades subsequentes.
+              </div>
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+              <strong style="color: #01427a;">📝 2. Padrão de Criação de Campos:</strong>
+              <p style="margin: 8px 0;"><strong>Título:</strong> Deve ser o mais coerente possível com o processo</p>
+              <p style="margin: 8px 0;"><strong>Código:</strong> Deve corresponder semanticamente ao título seguindo o padrão:</p>
+              
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px; margin: 15px 0;">
+                <div style="background: #e8f5e8; padding: 12px; border-radius: 6px; border: 1px solid #4caf50;">
+                  <strong style="color: #1b5e20;">🔤 Uma palavra:</strong>
+                  <p style="margin: 5px 0;">Todas as letras <strong>minúsculas</strong></p>
+                  <div style="font-family: monospace; background: #f8f9fa; padding: 6px; border-radius: 4px;">
+                    <strong>Título:</strong> Solicitante<br>
+                    <strong>Código:</strong> solicitante
+                  </div>
+                </div>
+                
+                <div style="background: #fff9e5; padding: 12px; border-radius: 6px; border: 1px solid #ffb200;">
+                  <strong style="color: #7a5c01;">🔤 Múltiplas palavras:</strong>
+                  <p style="margin: 5px 0;">Primeira palavra minúscula, <strong>primeiras letras das palavras subsequentes maiúsculas</strong></p>
+                  <div style="font-family: monospace; background: #f8f9fa; padding: 6px; border-radius: 4px;">
+                    <strong>Título:</strong> Data da Solicitação<br>
+                    <strong>Código:</strong> dataSolicitacao
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div style="background: #eaf4fb; padding: 15px; border-radius: 8px; border: 1px solid #01427a;">
+              <strong style="color: #01427a;">⚠️ 3. Observação Importante:</strong>
+              <p style="margin: 8px 0;">O último campo chamado <strong>"Processo"</strong> é criado <strong>automaticamente</strong> quando o formulário principal é vinculado ao processo.</p>
+              <div style="background: #f8f9fa; padding: 8px; border-radius: 4px; margin: 8px 0; font-family: monospace;">
+                <strong>Campo automático:</strong> wfprocess (Processo)
+              </div>
+            </div>
+          </div>
+          
+          <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border: 1px solid #4caf50; margin: 15px 0;">
+            <h4 style="margin-top: 0; color: #1b5e20;">✅ Exemplos de Campos Corretos:</h4>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; font-size: 14px;">
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 4px;">
+                <strong>Título:</strong> Solicitante Atual<br>
+                <code>Código: solicitanteAtual</code>
+              </div>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 4px;">
+                <strong>Título:</strong> Data da Solicitação<br>
+                <code>Código: dataSolicitacao</code>
+              </div>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 4px;">
+                <strong>Título:</strong> Local de Destino<br>
+                <code>Código: localDestino</code>
+              </div>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 4px;">
+                <strong>Título:</strong> Quantidade de Passageiros<br>
+                <code>Código: quantidadePassageiros</code>
+              </div>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 4px;">
+                <strong>Título:</strong> Observação<br>
+                <code>Código: observacao</code>
+              </div>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 4px;">
+                <strong>Título:</strong> Processo<br>
+                <code>Código: wfprocess (automático)</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="metodologia">
+        <strong>📊 Ícones de Controle dos Campos:</strong>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #6c757d;">
+          <h4 style="margin-top: 0; color: #495057; text-align: center;">👁️ Compreendendo os Ícones de Cada Campo</h4>
+          <p style="text-align: center; color: #6c757d; margin-bottom: 20px;">Cada campo possui três ícones que controlam sua visibilidade, editabilidade e obrigatoriedade</p>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+            
+            <!-- Ícone do Olho -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">👁️</span>
+                <strong style="color: #01427a;">Ícone do Olho - Visibilidade</strong>
+              </div>
+              
+              <div style="background: #e8f5e8; padding: 10px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #4caf50;">
+                <strong style="color: #1b5e20;">🟢 Olho Verde:</strong>
+                <p style="margin: 5px 0;">Campo <strong>visível</strong> no formulário</p>
+              </div>
+              
+              <div style="background: #f5f5f5; padding: 10px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #6c757d;">
+                <strong style="color: #495057;">⚫ Olho Cinza:</strong>
+                <p style="margin: 5px 0;">Campo <strong>não visível</strong> no formulário</p>
+              </div>
+            </div>
+
+            <!-- Ícone do Lápis -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">✏️</span>
+                <strong style="color: #01427a;">Ícone do Lápis - Editabilidade</strong>
+              </div>
+              
+              <div style="background: #e8f5e8; padding: 10px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #4caf50;">
+                <strong style="color: #1b5e20;">🟢 Lápis Verde:</strong>
+                <p style="margin: 5px 0;">Campo <strong>editável</strong> pelo usuário</p>
+              </div>
+              
+              <div style="background: #f5f5f5; padding: 10px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #6c757d;">
+                <strong style="color: #495057;">⚫ Lápis Cinza:</strong>
+                <p style="margin: 5px 0;">Campo <strong>não editável</strong> (somente leitura)</p>
+              </div>
+            </div>
+
+            <!-- Asterisco -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">✱</span>
+                <strong style="color: #01427a;">Asterisco - Obrigatoriedade</strong>
+              </div>
+              
+              <div style="background: #e8f5e8; padding: 10px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #4caf50;">
+                <strong style="color: #1b5e20;">🟢 Asterisco Verde:</strong>
+                <p style="margin: 5px 0;">Campo <strong>obrigatório</strong></p>
+              </div>
+              
+              <div style="background: #f5f5f5; padding: 10px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #6c757d;">
+                <strong style="color: #495057;">⚫ Asterisco Cinza:</strong>
+                <p style="margin: 5px 0;">Campo <strong>não obrigatório</strong> (opcional)</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Observação Importante -->
+          <div style="background: #fff3cd; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #ffc107;">
+            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+              <span style="font-size: 28px; margin-right: 15px;">⚠️</span>
+              <strong style="color: #856404; font-size: 18px;">Observação Importante sobre Obrigatoriedade</strong>
+            </div>
+            
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #ffc107;">
+              <p style="margin: 0 0 10px 0; color: #856404; font-size: 16px;">
+                <strong>Recomendação:</strong> Deixe para habilitar a <strong>obrigatoriedade de um campo na modelagem do processo</strong>, não diretamente no formulário.
+              </p>
+              
+              <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin: 10px 0;">
+                <strong style="color: #856404;">Por quê?</strong>
+                <p style="margin: 5px 0; color: #6c757d;">
+                  Se marcar o campo como obrigatório aqui no formulário, ele será obrigatório em <strong>todas as atividades</strong> em que aparecer, o que pode não ser desejado.
+                </p>
+              </div>
+              
+              <div style="background: #e8f5e8; padding: 12px; border-radius: 6px; margin: 10px 0; border-left: 3px solid #4caf50;">
+                <strong style="color: #1b5e20;">✅ Melhor Prática:</strong>
+                <p style="margin: 5px 0;">
+                  Configure a obrigatoriedade específica para cada atividade durante a modelagem do processo, permitindo maior flexibilidade e controle.
+                </p>
+              </div>
+              
+              <div style="background: #f8d7da; padding: 12px; border-radius: 6px; margin: 10px 0; border-left: 3px solid #dc3545;">
+                <strong style="color: #721c24;">❌ Evite:</strong>
+                <p style="margin: 5px 0;">
+                  Marcar campos como obrigatórios no formulário quando eles devem ser opcionais em algumas atividades do processo.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Seção 9.1.2: Modelagem das Atividades -->
+      <div class="subtitulo">9.1.2. ⚙️ Modelagem das Atividades - Configuração de Campos</div>
+      
+      <div class="destaque">
+        <strong>Da Criação à Execução:</strong><br>
+        Com o formulário criado e os campos necessários definidos, agora vamos mapear quais campos irão compor cada atividade do processo e definir suas configurações específicas.
+      </div>
+
+      <div class="metodologia">
+        <strong>🎛️ Configurações de Campos nas Atividades:</strong>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #6c757d;">
+          <h4 style="margin-top: 0; color: #495057; text-align: center;">📋 Tipos de Configuração de Campos</h4>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+            
+            <!-- Somente Leitura -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #6c757d;">
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">👁️</span>
+                <strong style="color: #495057;">Somente Leitura</strong>
+              </div>
+              
+              <div style="background: #f5f5f5; padding: 12px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #6c757d;">
+                <p style="margin: 5px 0;"><strong>Configuração:</strong> Campo selecionado</p>
+                <p style="margin: 5px 0;"><strong>Editável:</strong> ❌ Não marcado</p>
+                <p style="margin: 5px 0;"><strong>Obrigatório:</strong> ❌ Não marcado</p>
+                <p style="margin: 5px 0; color: #6c757d;"><strong>Resultado:</strong> Campo apenas para visualização</p>
+              </div>
+            </div>
+
+            <!-- Editável Opcional -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #ffc107;">
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">✏️</span>
+                <strong style="color: #856404;">Editável Opcional</strong>
+              </div>
+              
+              <div style="background: #fff9e5; padding: 12px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #ffc107;">
+                <p style="margin: 5px 0;"><strong>Configuração:</strong> Campo selecionado</p>
+                <p style="margin: 5px 0;"><strong>Editável:</strong> ✅ Marcado</p>
+                <p style="margin: 5px 0;"><strong>Obrigatório:</strong> ❌ Não marcado</p>
+                <p style="margin: 5px 0; color: #856404;"><strong>Resultado:</strong> Usuário pode inserir valores, mas não é obrigatório</p>
+              </div>
+            </div>
+
+            <!-- Editável Obrigatório -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #dc3545;">
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">✱</span>
+                <strong style="color: #721c24;">Editável Obrigatório</strong>
+              </div>
+              
+              <div style="background: #f8d7da; padding: 12px; border-radius: 6px; margin: 8px 0; border-left: 3px solid #dc3545;">
+                <p style="margin: 5px 0;"><strong>Configuração:</strong> Campo selecionado</p>
+                <p style="margin: 5px 0;"><strong>Editável:</strong> ✅ Marcado</p>
+                <p style="margin: 5px 0;"><strong>Obrigatório:</strong> ✅ Marcado</p>
+                <p style="margin: 5px 0; color: #721c24;"><strong>Resultado:</strong> Fusion obriga preenchimento antes de avançar</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informação sobre acesso às configurações -->
+      <div class="destaque">
+        <strong>🎯 Como Acessar as Configurações das Atividades:</strong><br>
+        Antes de visualizar os exemplos das atividades, é importante entender como acessar suas configurações no Fusion Platform.
+      </div>
+
+      <div style="background: #e3f1ff; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #1976d2;">
+        <h4 style="margin-top: 0; color: #0d47a1; text-align: center;">⚙️ Métodos de Acesso às Configurações</h4>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+          
+          <!-- Atividades de Usuário -->
+          <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #1976d2;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 24px; margin-right: 10px;">👤</span>
+              <strong style="color: #01427a;">Atividades de Usuário</strong>
+            </div>
+            <p style="margin: 8px 0; font-size: 14px;"><strong>Aplicável a:</strong> Solicitar Veículo, Analisar Solicitação, Liberar Veículo</p>
+            
+            <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin: 8px 0;">
+              <strong style="color: #01427a;">📋 Passos:</strong>
+              <ol style="margin: 8px 0; padding-left: 20px; font-size: 14px;">
+                <li><strong>Clique sobre a atividade</strong> no diagrama BPMN</li>
+                <li>Um <strong>ícone será habilitado</strong> no canto superior esquerdo da atividade</li>
+                <li><strong>Clique neste ícone</strong> para abrir o menu</li>
+                <li>O menu com <strong>campos para seleção e configuração</strong> será exibido</li>
+              </ol>
+            </div>
+          </div>
+
+          <!-- Atividade de Notificação -->
+          <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #1976d2;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 24px; margin-right: 10px;">📧</span>
+              <strong style="color: #01427a;">Atividade de Notificação</strong>
+            </div>
+            <p style="margin: 8px 0; font-size: 14px;"><strong>Aplicável a:</strong> Notificar Solicitante</p>
+            
+            <div style="background: #f8f9fa; padding: 12px; border-radius: 6px; margin: 8px 0;">
+              <strong style="color: #01427a;">📧 Passos:</strong>
+              <ol style="margin: 8px 0; padding-left: 20px; font-size: 14px;">
+                <li><strong>Clique sobre a atividade</strong> "Notificar Solicitante"</li>
+                <li>No <strong>menu lateral direito</strong> que aparece</li>
+                <li>Clique na opção <strong>"Editar"</strong> em "Modelo do E-mail"</li>
+                <li>A <strong>tela de configuração do e-mail</strong> será exibida</li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Exemplos das Atividades -->
+      <div class="exemplo">
+        <strong>🔄 Exemplos Práticos das Atividades do Processo:</strong>
+        
+        <!-- Atividade: Solicitar Veículo -->
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">🚗 Atividade: Solicitar Veículo</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/atividade_solicitar_veiculo.png" 
+                 alt="Configuração da atividade Solicitar Veículo no Fusion Platform" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+            💡 Primeira atividade do processo - preenchimento inicial da solicitação
+          </p>
+        </div>
+
+        <!-- Atividade: Analisar Solicitação -->
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">🔍 Atividade: Analisar Solicitação</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/atividade_analisar_solicitacao.png" 
+                 alt="Configuração da atividade Analisar Solicitação no Fusion Platform" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+            💡 Segunda atividade - análise e aprovação da solicitação
+          </p>
+        </div>
+
+        <!-- Atividade: Liberar Veículo -->
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">✅ Atividade: Liberar Veículo</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/atividade_liberar_veiculo.png" 
+                 alt="Configuração da atividade Liberar Veículo no Fusion Platform" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+            💡 Terceira atividade - liberação e controle do veículo
+          </p>
+        </div>
+
+        <!-- Atividade: Notificar Solicitante -->
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">📧 Atividade: Notificar Solicitante</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/atividade_notificar_solicitante.png" 
+                 alt="Configuração da atividade Notificar Solicitante no Fusion Platform" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+            💡 Atividade final - notificação por e-mail do resultado
+          </p>
+          
+          <!-- Instrução específica para atividade de notificação -->
+          <div style="background: #fff3cd; padding: 15px; border-radius: 8px; margin: 15px 0; border: 2px solid #ffc107;">
+            <div style="display: flex; align-items: center; margin-bottom: 10px;">
+              <span style="font-size: 20px; margin-right: 10px;">📧</span>
+              <strong style="color: #856404;">Como Acessar as Configurações de E-mail:</strong>
+            </div>
+            <ol style="margin: 8px 0; padding-left: 20px; color: #856404;">
+              <li><strong>Clique sobre a atividade</strong> "Notificar Solicitante" no diagrama</li>
+              <li>No <strong>menu lateral direito</strong> que aparece</li>
+              <li>Clique na opção <strong>"Editar"</strong> em <strong>"Modelo do E-mail"</strong></li>
+              <li>A tela de configuração do e-mail será exibida (conforme imagem acima)</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configuração de Atividades de Notificação -->
+      <div class="metodologia">
+        <strong>📧 Configuração de Atividades de Notificação:</strong>
+        
+        <div style="background: #e3f1ff; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #1976d2;">
+          <h4 style="margin-top: 0; color: #0d47a1; text-align: center;">✉️ Elementos da Atividade de Notificação</h4>
+          
+          <div style="display: grid; grid-template-columns: 1fr; gap: 20px; margin: 20px 0;">
+            
+            <!-- 1. Definições Gerais -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #1976d2;">
+              <strong style="color: #01427a;">🎨 1. Definições Gerais:</strong>
+              <p style="margin: 8px 0;">Na grande maioria das vezes, será utilizada a opção de <strong>"Criar Layout"</strong></p>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin: 8px 0;">
+                <strong>Recomendação:</strong> Sempre prefira criar um layout personalizado para melhor controle da apresentação
+              </div>
+            </div>
+
+            <!-- 2. Informações de Envio -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #1976d2;">
+              <strong style="color: #01427a;">📝 2. Informações de Envio:</strong>
+              <p style="margin: 8px 0;">Deve-se informar o <strong>assunto do e-mail</strong> podendo selecionar um ou mais campos do formulário para compor o assunto</p>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin: 8px 0;">
+                <strong>Exemplo:</strong> "Veículo Liberado Placa #FRMTRPSOLVLV.placaVeiculoLiberado"
+              </div>
+            </div>
+
+            <!-- 3. Criação do Layout -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #1976d2;">
+              <strong style="color: #01427a;">🎨 3. Criação do Layout:</strong>
+              <p style="margin: 8px 0;">Aqui será escrita a <strong>mensagem do e-mail</strong>. O usuário pode:</p>
+              <ul style="margin: 8px 0; padding-left: 20px;">
+                <li>Criar o texto que achar necessário</li>
+                <li>Utilizar campos do formulário para compor a mensagem</li>
+                <li>Adicionar imagens no cabeçalho e rodapé</li>
+              </ul>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin: 8px 0;">
+                <strong>Dica:</strong> Use variáveis do formulário para personalizar a mensagem automaticamente
+              </div>
+            </div>
+
+            <!-- 4. Anexos -->
+            <div style="background: #fff; padding: 15px; border-radius: 8px; border: 1px solid #1976d2;">
+              <strong style="color: #01427a;">📎 4. Anexos:</strong>
+              <p style="margin: 8px 0;">Caso seja necessário, podem ser incluídos <strong>campos do tipo arquivo</strong> que serão os anexos do e-mail</p>
+              <div style="background: #f8f9fa; padding: 10px; border-radius: 6px; margin: 8px 0;">
+                <strong>Exemplo:</strong> Checklist do veículo, termo de responsabilidade, etc.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Configuração de Destinatário -->
+      <div class="exemplo">
+        <strong>👤 Configuração de Destinatário da Notificação:</strong>
+        
+        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <p style="margin: 8px 0;">Para informar o destinatário do e-mail, siga as opções apresentadas no menu lateral direito ao clicar sobre a atividade de notificação do processo.</p>
+          <p style="margin: 8px 0;">No processo em questão, o <strong>destinatário é o solicitante</strong> e foi configurado conforme mostrado na imagem a seguir:</p>
+        </div>
+        
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">⚙️ Configuração de Destinatário - Notificar Solicitante</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/atividade_notificar_solicitante_configurar_destinatario.png" 
+                 alt="Configuração do destinatário da notificação no Fusion Platform" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <p style="text-align: center; color: #666; font-size: 14px; margin-top: 15px;">
+            💡 Configuração específica para envio ao solicitante do processo
+          </p>
+        </div>
+      </div>
+
+      <!-- Seção 9.1.3: Processo em Execução -->
+      <div class="subtitulo">9.1.3. 🔄 Processo em Execução - Fluxo Completo</div>
+      
+      <div class="destaque">
+        <strong>Do Planejamento à Realidade:</strong><br>
+        Agora vamos acompanhar como o processo funciona na prática, desde a solicitação inicial até a finalização, mostrando cada etapa em execução no Fusion Platform.
+      </div>
+
+      <!-- Fluxo Completo do Processo -->
+      <div class="exemplo">
+        <strong>📋 Fluxo Completo: Solicitação de Veículo em Execução</strong>
+        
+        <!-- Visão Geral do Processo -->
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">🎯 Visão Geral: Iniciando o Processo</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/iniciar_processo.png" 
+                 alt="Tela de seleção e início do processo de solicitação de veículo" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #6c757d;">
+            <h4 style="margin-top: 0; color: #495057;">🚀 Pontos Importantes desta Tela:</h4>
+            <ul style="margin: 8px 0; color: #495057;">
+              <li><strong>Seleção de Processo:</strong> Interface para escolher o processo desejado</li>
+              <li><strong>Navegação Intuitiva:</strong> Categorias organizadas por tipo de processo</li>
+              <li><strong>Início Rápido:</strong> Basta clicar no nome do processo para iniciar imediatamente</li>
+              <li><strong>Visão Centralizada:</strong> Todos os processos disponíveis em um local</li>
+            </ul>
+          </div>
+        </div>
+        
+        <!-- Etapa 1: Solicitação Inicial -->
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">🚀 Etapa 1: Solicitação Inicial</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/processo_atividade_solicitar_veiculo_preenchido.png" 
+                 alt="Atividade Solicitar Veículo - formulário preenchido" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #4caf50;">
+            <h4 style="margin-top: 0; color: #1b5e20;">✅ Pontos Importantes desta Etapa:</h4>
+            <ul style="margin: 8px 0; color: #1b5e20;">
+              <li><strong>Formulário Principal:</strong> Todos os campos definidos na modelagem aparecem</li>
+              <li><strong>Campos Obrigatórios:</strong> Marcados com asterisco vermelho (*)</li>
+              <li><strong>Validação:</strong> Sistema impede avanço sem preenchimento obrigatório</li>
+              <li><strong>Interface Intuitiva:</strong> Layout limpo e organizado para o usuário</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Etapa 2: Análise da Solicitação -->
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">🔍 Etapa 2: Análise da Solicitação</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/processo_atividade_analisar_solicitacao_assumida.png" 
+                 alt="Tela de análise da solicitação pelo coordenador" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/processo_atividade_analisar_solicitacao_opcoes.png" 
+                 alt="Opções do campo de seleção para aprovação" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/processo_atividade_analisar_solicitacao_fluxo.png" 
+                 alt="Fluxo BPMN mostrando análise de solicitação em execução" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <div style="background: #fff9e5; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #ffc107;">
+            <h4 style="margin-top: 0; color: #856404;">⚡ Pontos Importantes desta Etapa:</h4>
+            <ul style="margin: 8px 0; color: #856404;">
+              <li><strong>Campos de Leitura:</strong> Informações da solicitação aparecem apenas para visualização</li>
+              <li><strong>Campo de Decisão:</strong> "Solicitação Aprovada?" com opções Sim/Não</li>
+              <li><strong>Notificação Verde:</strong> Confirmação de tarefa assumida com sucesso</li>
+              <li><strong>Responsabilidade:</strong> Tarefa atribuída ao coordenador correto</li>
+              <li><strong>Acompanhamento:</strong> O usuário pode acompanhar o fluxo clicando na guia "Fluxo" no canto esquerdo superior da tela</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Etapa 3: Liberação do Veículo -->
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">✅ Etapa 3: Liberação do Veículo</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/processo_atividade_liberar_veiculo.png" 
+                 alt="Tela de liberação do veículo com campos específicos" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <div style="background: #e3f1ff; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #1976d2;">
+            <h4 style="margin-top: 0; color: #0d47a1;">🎯 Pontos Importantes desta Etapa:</h4>
+            <ul style="margin: 8px 0; color: #0d47a1;">
+              <li><strong>Campos Específicos:</strong> Placa do Veículo Liberado, Data de Liberação</li>
+              <li><strong>Upload de Arquivo:</strong> Checklist do Veículo pode ser anexado</li>
+              <li><strong>Campos Obrigatórios:</strong> Marcados conforme configuração da atividade</li>
+              <li><strong>Controle de Qualidade:</strong> Documentação necessária para liberação</li>
+              <li><strong>Acompanhamento:</strong> O usuário pode acompanhar o fluxo clicando na guia "Fluxo" no canto esquerdo superior da tela</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Etapa 4: Processo Finalizado -->
+        <div class="bpmn-diagram">
+          <strong style="display: block; text-align: center; margin-bottom: 15px;">🎉 Etapa 4: Processo Finalizado</strong>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/processo_atividade_notificacao_processo_completo.png" 
+                 alt="Notificação de processo finalizado com todos os dados preenchidos" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <img src="images/processo_atividade_notificacao_email.png" 
+                 alt="Email de confirmação da liberação do veículo" 
+                 style="max-width: 100%; height: auto; border: 2px solid #01427a; border-radius: 10px; box-shadow: 0 4px 15px rgba(1, 66, 122, 0.2);"/>
+          </div>
+          
+          <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid #4caf50;">
+            <h4 style="margin-top: 0; color: #1b5e20;">🏆 Pontos Importantes desta Etapa:</h4>
+            <ul style="margin: 8px 0; color: #1b5e20;">
+              <li><strong>Histórico Completo:</strong> Todos os campos preenchidos ao longo do processo</li>
+              <li><strong>Dados Consolidados:</strong> Informações de todas as etapas em um local</li>
+              <li><strong>Auditoria:</strong> Rastro completo de quem fez o que e quando</li>
+              <li><strong>Documentação:</strong> Processo finalizado com todos os anexos</li>
+              <li><strong>Confirmação por Email:</strong> Notificação automática enviada ao solicitante confirmando a liberação do veículo</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Resumo dos Benefícios -->
+      <div class="metodologia">
+        <strong>🎯 Benefícios Demonstrados no Fluxo Completo:</strong>
+        
+        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 20px 0; border: 2px solid #6c757d;">
+          <h4 style="margin-top: 0; color: #495057; text-align: center;">🏆 Resultados Alcançados</h4>
+          
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 20px 0;">
+            
+            <!-- Eficiência -->
+            <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border: 1px solid #4caf50;">
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">⚡</span>
+                <strong style="color: #1b5e20;">Eficiência</strong>
+              </div>
+              <ul style="margin: 8px 0; font-size: 14px; color: #1b5e20;">
+                <li>Processo digitalizado end-to-end</li>
+                <li>Eliminação de papéis e e-mails</li>
+                <li>Aprovações automáticas por sistema</li>
+                <li>Redução significativa do tempo</li>
+              </ul>
+            </div>
+
+            <!-- Controle -->
+            <div style="background: #e3f1ff; padding: 15px; border-radius: 8px; border: 1px solid #1976d2;">
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">🎛️</span>
+                <strong style="color: #0d47a1;">Controle</strong>
+              </div>
+              <ul style="margin: 8px 0; font-size: 14px; color: #0d47a1;">
+                <li>Rastreabilidade completa do processo</li>
+                <li>Histórico de todas as ações</li>
+                <li>Identificação de responsáveis</li>
+                <li>Auditoria automática</li>
+              </ul>
+            </div>
+
+            <!-- Qualidade -->
+            <div style="background: #fff9e5; padding: 15px; border-radius: 8px; border: 1px solid #ffc107;">
+              <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                <span style="font-size: 24px; margin-right: 10px;">🏅</span>
+                <strong style="color: #856404;">Qualidade</strong>
+              </div>
+              <ul style="margin: 8px 0; font-size: 14px; color: #856404;">
+                <li>Padronização de procedimentos</li>
+                <li>Validações automáticas</li>
+                <li>Documentação obrigatória</li>
+                <li>Redução de erros humanos</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="template">
+        <strong>Checklist para Criação de Formulários:</strong>
+        <ul>
+          <li>✅ Categoria definida e condizente com o processo</li>
+          <li>✅ Nome do formulário segue padrão [CATEGORIA] + Nome Específico</li>
+          <li>✅ Formulário principal identificado com sufixo "Principal" quando necessário</li>
+          <li>✅ Campos essenciais mapeados e organizados logicamente</li>
+          <li>✅ Validações de campos obrigatórios configuradas</li>
+          <li>✅ Layout responsivo e intuitivo para o usuário final</li>
+        </ul>
+      </div>
+
+      <!-- Seção 9.2: Configuração -->
+      <div class="subtitulo">9.2. ⚙️ Configuração no Fusion Platform</div>
+
+      <div class="metodologia">
+        <strong>Configuração das Atividades:</strong>
+        
+        <div style="background: #eaf4fb; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <h4 style="margin-top: 0; color: #01427a;">🚗 1. Solicitar Veículo (User Task)</h4>
+          <ul style="margin: 0;">
+            <li><strong>Responsável:</strong> Funcionário/Encarregado da obra</li>
+            <li><strong>Formulário:</strong> Dados do solicitante, tipo de veículo, período, destino</li>
+            <li><strong>Validações:</strong> Campos obrigatórios, datas futuras, justificativa</li>
+          </ul>
+        </div>
+
+        <div style="background: #f1f8e9; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <h4 style="margin-top: 0; color: #1b5e20;">🔍 2. Analisar Solicitação (User Task)</h4>
+          <ul style="margin: 0;">
+            <li><strong>Responsável:</strong> Coordenador de Frota/Administração</li>
+            <li><strong>Ações:</strong> Verificar disponibilidade, validar necessidade</li>
+            <li><strong>Integrações:</strong> Consulta agenda de veículos, sistema de frota</li>
+          </ul>
+        </div>
+
+        <div style="background: #fff9e5; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <h4 style="margin-top: 0; color: #7a5c01;">⚖️ 3. Análise do Aprovador (Gateway)</h4>
+          <ul style="margin: 0;">
+            <li><strong>Responsável:</strong> Gerente/Diretor (conforme valor/período)</li>
+            <li><strong>Decisões:</strong> Aprovar, Reprovar, Solicitar Ajustes</li>
+            <li><strong>Critérios:</strong> Necessidade, custos, disponibilidade</li>
+          </ul>
+        </div>
+
+        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <h4 style="margin-top: 0; color: #388e3c;">✅ 4. Liberar Veículo (Service Task)</h4>
+          <ul style="margin: 0;">
+            <li><strong>Ações:</strong> Reservar veículo, gerar autorização</li>
+            <li><strong>Integrações:</strong> Sistema de frota, agenda, controle de chaves</li>
+            <li><strong>Documentos:</strong> Termo de responsabilidade, checklist</li>
+          </ul>
+        </div>
+
+        <div style="background: #e3f1ff; padding: 15px; border-radius: 8px; margin: 15px 0;">
+          <h4 style="margin-top: 0; color: #0d47a1;">📧 5. Notificar Solicitante (Send Task)</h4>
+          <ul style="margin: 0;">
+            <li><strong>Aprovado:</strong> Dados do veículo, horário de retirada, responsabilidades</li>
+            <li><strong>Reprovado:</strong> Motivo da recusa, sugestões alternativas</li>
+            <li><strong>Canais:</strong> E-mail, SMS, notificação no sistema</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Seção 9.3: Testes -->
+      <div class="subtitulo">9.3. 🧪 Testes e Validação</div>
+
+      <div class="checklist">
+        <strong>Checklist de Testes por Atividade:</strong>
+        <ul>
+          <li><strong>Solicitar Veículo:</strong> Preenchimento, validações, campos obrigatórios</li>
+          <li><strong>Analisar Solicitação:</strong> Consulta disponibilidade, histórico</li>
+          <li><strong>Gateway de Aprovação:</strong> Regras por valor, hierarquia, prazos</li>
+          <li><strong>Liberar Veículo:</strong> Reserva automática, geração de documentos</li>
+          <li><strong>Notificar Solicitante:</strong> E-mails, templates, informações corretas</li>
+        </ul>
+      </div>
+
+      <div class="exemplo">
+        <strong>Cenários de Teste Baseados no Fluxo:</strong>
+        <ul>
+          <li><strong>Fluxo Completo Aprovado:</strong> Solicitação → Análise → Aprovação → Liberação → Notificação</li>
+          <li><strong>Solicitação Reprovada:</strong> Análise negativa → Gateway rejeita → Notificação de recusa</li>
+          <li><strong>Conflito de Agenda:</strong> Veículo indisponível → Sugestão de alternativa</li>
+          <li><strong>Aprovação Condicional:</strong> Ajustes solicitados → Retorno para solicitante</li>
+        </ul>
+      </div>
+
+      <!-- Seção 9.4: Go-Live -->
+      <div class="subtitulo">9.4. 🚀 Go-Live e Acompanhamento</div>
+
+      <div class="metodologia">
+        <strong>Estratégia de Implementação:</strong>
+        <ol>
+          <li><strong>Configuração Inicial:</strong> Importar modelo BPMN para o Fusion Platform</li>
+          <li><strong>Formulários:</strong> Criar interfaces para cada User Task</li>
+          <li><strong>Regras de Negócio:</strong> Configurar gateway e condições</li>
+          <li><strong>Integrações:</strong> Conectar com sistema de frota existente</li>
+          <li><strong>Testes:</strong> Validar cada atividade individualmente e fluxo completo</li>
+          <li><strong>Treinamento:</strong> Capacitar usuários em cada atividade</li>
+          <li><strong>Go-Live:</strong> Ativar processo em produção com acompanhamento</li>
+        </ol>
+      </div>
+
+      <div class="destaque">
+        <strong>Cronograma por Atividade:</strong><br>
+        <strong>Dias 1-3:</strong> Configurar "Solicitar Veículo" e formulários<br>
+        <strong>Dias 4-6:</strong> Configurar "Analisar Solicitação" e integrações<br>
+        <strong>Dias 7-9:</strong> Configurar Gateway e regras de aprovação<br>
+        <strong>Dias 10-12:</strong> Configurar "Liberar Veículo" e automatizações<br>
+        <strong>Dias 13-14:</strong> Configurar notificações e testes finais
+      </div>
+
+      <div class="template">
+        <strong>Indicadores de Sucesso por Atividade:</strong>
+        <ul>
+          <li><strong>Solicitar Veículo:</strong> Tempo médio de preenchimento < 5 min</li>
+          <li><strong>Analisar Solicitação:</strong> Análise em até 2 horas úteis</li>
+          <li><strong>Aprovação:</strong> Decisão em até 4 horas úteis</li>
+          <li><strong>Liberação:</strong> Disponibilização em até 1 hora</li>
+          <li><strong>Notificação:</strong> Comunicação imediata após decisão</li>
+        </ul>
+      </div>
+
+      <div class="evolucao">
+        <strong>Melhorias Futuras do Processo:</strong>
+        <ul>
+          <li>Integração com GPS para rastreamento em tempo real</li>
+          <li>App mobile para solicitações em campo</li>
+          <li>IA para sugestão automática de veículos disponíveis</li>
+          <li>Dashboard executivo com métricas da frota</li>
+          <li>Integração com sistema de combustível e manutenção</li>
+        </ul>
+      </div>
+    </div>
+
+    
+    <!-- Seção de Vídeos do Treinamento -->
+    <div class="section" id="videos-treinamento">
+      <h2>🎥 Treinamento em Vídeo - BPM Fusion Platform</h2>
+      
+      <div class="destaque">
+        <strong>Complemente seu aprendizado com vídeos práticos!</strong><br>
+        Acompanhe o treinamento completo em 7 vídeos que demonstram passo a passo a implementação de BPM no Fusion Platform, desde os conceitos básicos até o teste prático do processo criado.
+      </div>
+
+      <!-- Vídeo Principal -->
+      <div class="video-container">
+        <video class="video-player" controls id="mainVideo">
+          <source src="videos/Treinamento - Introdução - 01.mkv" type="video/mp4">
+          Seu navegador não suporta o elemento de vídeo.
+        </video>
+        <div class="video-info">
+          <div class="video-title" id="mainVideoTitle">Treinamento - Introdução - 01</div>
+          <div class="video-description" id="mainVideoDescription">Introdução aos conceitos de BPM e visão geral do treinamento completo.</div>
+          <div class="video-duration" id="mainVideoDuration">Duração: 32 segundos</div>
+        </div>
+      </div>
+
+      <!-- Grid de Vídeos -->
+      <div class="video-grid">
+        <div class="video-card" onclick="playVideo('videos/Treinamento - Introdução - 01.mkv', 'Treinamento - Introdução - 01', 'Introdução aos conceitos de BPM e visão geral do treinamento completo.')">
+          <h4>📚 Vídeo 01 - Introdução</h4>
+          <p>Conceitos fundamentais de BPM, metodologias aplicáveis e visão geral do processo de solicitação de veículo.</p>
+          <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 32 segundos</div>
+          <span class="video-link">▶️ Assistir</span>
+        </div>
+
+        <div class="video-card" onclick="playVideo('videos/Treinamento - Modelagem Inicial - 02.mkv', 'Treinamento - Modelagem Inicial - 02', 'Criação do diagrama BPMN e configuração inicial do processo no Fusion Platform.')">
+          <h4>🎨 Vídeo 02 - Modelagem Inicial</h4>
+          <p>Criação do diagrama BPMN, definição de atividades e configuração inicial do processo no sistema.</p>
+          <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 09:29 min</div>
+          <span class="video-link">▶️ Assistir</span>
+        </div>
+
+        <div class="video-card" onclick="playVideo('videos/Treinamento - Construção dos Formulários - Parte 01 - 03.mkv', 'Treinamento - Construção dos Formulários - Parte 01 - 03', 'Primeira parte da criação de formulários: configuração básica e campos principais.')">
+          <h4>📝 Vídeo 03 - Formulários (Parte 1)</h4>
+          <p>Primeira parte da construção de formulários: configuração básica, campos principais e validações.</p>
+          <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 05:20 min</div>
+          <span class="video-link">▶️ Assistir</span>
+        </div>
+
+        <div class="video-card" onclick="playVideo('videos/Treinamento - Construção dos Formulários - Parte 02 - 04.mkv', 'Treinamento - Construção dos Formulários - Parte 02 - 04', 'Segunda parte da criação de formulários: campos específicos e configurações avançadas.')">
+          <h4>📝 Vídeo 04 - Formulários (Parte 2)</h4>
+          <p>Segunda parte da construção de formulários: campos específicos, configurações avançadas e validações.</p>
+          <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 09:26 min</div>
+          <span class="video-link">▶️ Assistir</span>
+        </div>
+
+        <div class="video-card" onclick="playVideo('videos/Treinamento - Vinculação do Formulário ao Processo e Configuração das Atividades - 05.mkv', 'Treinamento - Vinculação do Formulário ao Processo e Configuração das Atividades - 05', 'Vinculação dos formulários ao processo BPMN e configuração detalhada de cada atividade.')">
+          <h4>🔗 Vídeo 05 - Vinculação e Atividades</h4>
+          <p>Vinculação dos formulários ao processo BPMN e configuração detalhada de cada atividade do fluxo.</p>
+          <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 10:04 min</div>
+          <span class="video-link">▶️ Assistir</span>
+        </div>
+
+        <div class="video-card" onclick="playVideo('videos/Treinamento - Criação Papéis - Configuração dos Participantes - Liberação da Modelagem - 06.mkv', 'Treinamento - Criação Papéis - Configuração dos Participantes - Liberação da Modelagem - 06', 'Criação de papéis, configuração de participantes e liberação final da modelagem para execução.')">
+          <h4>👥 Vídeo 06 - Papéis e Liberação</h4>
+          <p>Criação de papéis, configuração de participantes e liberação final da modelagem para execução.</p>
+          <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 03:50 min</div>
+          <span class="video-link">▶️ Assistir</span>
+        </div>
+
+        <div class="video-card" onclick="playVideo('videos/Treinamento - Teste com a Versão Criada - 07.mkv', 'Treinamento - Teste com a Versão Criada - 07', 'Teste prático do processo criado, demonstração de execução e validação final.')">
+          <h4>🧪 Vídeo 07 - Teste Prático</h4>
+          <p>Teste prático do processo criado, demonstração de execução e validação final do sistema.</p>
+          <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 07:21 min</div>
+          <span class="video-link">▶️ Assistir</span>
+        </div>
+      </div>
+
+      <!-- Instruções de Uso -->
+      <div class="metodologia">
+        <strong>📋 Como usar os vídeos:</strong>
+        <ul>
+          <li><strong>Ordem recomendada:</strong> Assista os vídeos na sequência numérica (01 a 07) para acompanhar o fluxo completo</li>
+          <li><strong>Duração total:</strong> 45 minutos e 42 segundos de conteúdo prático</li>
+          <li><strong>Navegação:</strong> Clique em qualquer card de vídeo para reproduzir no player principal</li>
+          <li><strong>Controles:</strong> Use os controles do player para pausar, avançar ou retroceder</li>
+          <li><strong>Complemento:</strong> Os vídeos complementam perfeitamente o conteúdo escrito deste tutorial</li>
+        </ul>
+      </div>
+
+      <!-- Benefícios dos Vídeos -->
+      <div class="evolucao">
+        <strong>🎯 Benefícios do Treinamento em Vídeo:</strong>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 20px 0;">
+          <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; border-left: 4px solid #4caf50;">
+            <strong style="color: #1b5e20;">👀 Visualização Prática</strong>
+            <p style="margin: 8px 0; color: #1b5e20; font-size: 14px;">Veja exatamente como executar cada passo no Fusion Platform</p>
+          </div>
+          <div style="background: #e3f1ff; padding: 15px; border-radius: 8px; border-left: 4px solid #1976d2;">
+            <strong style="color: #0d47a1;">⏯️ Ritmo Personalizado</strong>
+            <p style="margin: 8px 0; color: #0d47a1; font-size: 14px;">Pause, retroceda e avance conforme sua necessidade</p>
+          </div>
+          <div style="background: #fff9e5; padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107;">
+            <strong style="color: #856404;">🔄 Revisão Ilimitada</strong>
+            <p style="margin: 8px 0; color: #856404; font-size: 14px;">Assista quantas vezes precisar para dominar o conteúdo</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Framework de Maturidade de Processos -->
+    <div class="section" id="framework-maturidade">
+      <h2>🔍 Framework de Maturidade de Processos - FORTES Engenharia</h2>
+      
+      <div class="destaque">
+        <strong>Por que este Framework é Importante?</strong><br>
+        Permite que a empresa identifique exatamente em qual estágio está, entenda os próximos passos e planeje a evolução de forma estruturada e mensurável.
+      </div>
+      
+      <div class="framework-container">
+        <!-- Estágio 1: Diagnóstico -->
+        <div class="estagio" data-estagio="1">
+          <div class="estagio-header">
+            <div class="estagio-numero">1</div>
+            <h3>🔍 Diagnóstico Inicial</h3>
+            <div class="estagio-status" id="status-1">❌ Não Iniciado</div>
+          </div>
+          <div class="estagio-content">
+            <p><strong>O que é:</strong> Primeira análise dos processos existentes na empresa</p>
+            <div class="checklist-estagio">
+              <h4>✅ Checklist de Conclusão:</h4>
+              <ul>
+                <li data-item="1.1">Mapeamento da cadeia de valor</li>
+                <li data-item="1.2">Identificação dos processos principais</li>
+                <li data-item="1.3">Entrevistas com stakeholders</li>
+                <li data-item="1.4">Documentação do AS-IS</li>
+              </ul>
+            </div>
+            <div class="estagio-beneficios">
+              <h4>🎯 Benefícios Alcançados:</h4>
+              <ul>
+                <li>Visão clara dos processos atuais</li>
+                <li>Identificação de gargalos</li>
+                <li>Base para planejamento</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estágio 2: Mapeamento -->
+        <div class="estagio" data-estagio="2">
+          <div class="estagio-header">
+            <div class="estagio-numero">2</div>
+            <h3>🗺️ Mapeamento de Processos</h3>
+            <div class="estagio-status" id="status-2">❌ Não Iniciado</div>
+          </div>
+          <div class="estagio-content">
+            <p><strong>O que é:</strong> Modelagem visual detalhada dos processos em BPMN</p>
+            <div class="checklist-estagio">
+              <h4>✅ Checklist de Conclusão:</h4>
+              <ul>
+                <li data-item="2.1">Diagramas BPMN dos processos AS-IS</li>
+                <li data-item="2.2">Identificação de raias e responsabilidades</li>
+                <li data-item="2.3">Mapeamento de fluxos e decisões</li>
+                <li data-item="2.4">Documentação de regras de negócio</li>
+              </ul>
+            </div>
+            <div class="estagio-beneficios">
+              <h4>🎯 Benefícios Alcançados:</h4>
+              <ul>
+                <li>Processos visualmente claros</li>
+                <li>Comunicação padronizada</li>
+                <li>Base para análise</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estágio 3: Levantamento de Requisitos -->
+        <div class="estagio" data-estagio="3">
+          <div class="estagio-header">
+            <div class="estagio-numero">3</div>
+            <h3>📋 Levantamento de Requisitos</h3>
+            <div class="estagio-status" id="status-3">❌ Não Iniciado</div>
+          </div>
+          <div class="estagio-content">
+            <p><strong>O que é:</strong> Coleta detalhada de necessidades e especificações</p>
+            <div class="checklist-estagio">
+              <h4>✅ Checklist de Conclusão:</h4>
+              <ul>
+                <li data-item="3.1">Entrevistas com usuários finais</li>
+                <li data-item="3.2">Documentação de requisitos funcionais</li>
+                <li data-item="3.3">Especificação de regras de negócio</li>
+                <li data-item="3.4">Definição de indicadores (KPIs)</li>
+              </ul>
+            </div>
+            <div class="estagio-beneficios">
+              <h4>🎯 Benefícios Alcançados:</h4>
+              <ul>
+                <li>Requisitos claros e validados</li>
+                <li>Base para desenvolvimento</li>
+                <li>Alinhamento com usuários</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estágio 4: Registro de Gargalos -->
+        <div class="estagio" data-estagio="4">
+          <div class="estagio-header">
+            <div class="estagio-numero">4</div>
+            <h3>🚧 Registro de Gargalos e Melhorias</h3>
+            <div class="estagio-status" id="status-4">❌ Não Iniciado</div>
+          </div>
+          <div class="estagio-content">
+            <p><strong>O que é:</strong> Identificação e documentação de problemas e oportunidades</p>
+            <div class="checklist-estagio">
+              <h4>✅ Checklist de Conclusão:</h4>
+              <ul>
+                <li data-item="4.1">Análise de gargalos identificados</li>
+                <li data-item="4.2">Priorização de melhorias</li>
+                <li data-item="4.3">Documentação de causas raiz</li>
+                <li data-item="4.4">Planejamento de ações corretivas</li>
+              </ul>
+            </div>
+            <div class="estagio-beneficios">
+              <h4>🎯 Benefícios Alcançados:</h4>
+              <ul>
+                <li>Problemas identificados e priorizados</li>
+                <li>Plano de melhorias estruturado</li>
+                <li>Base para otimização</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Estágio 5: Validação -->
+        <div class="estagio" data-estagio="5">
+          <div class="estagio-header">
+            <div class="estagio-numero">5</div>
+            <h3>✅ Validação com as Áreas</h3>
+            <div class="estagio-status" id="status-5">❌ Não Iniciado</div>
+          </div>
+          <div class="estagio-content">
+            <p><strong>O que é:</strong> Aprovação e validação dos processos redesenhados</p>
+            <div class="checklist-estagio">
+              <h4>✅ Checklist de Conclusão:</h4>
+              <ul>
+                <li data-item="5.1">Apresentação dos processos TO-BE</li>
+                <li data-item="5.2">Coleta de feedback das áreas</li>
+                <li data-item="5.3">Ajustes e refinamentos</li>
+                <li data-item="5.4">Validação final e aprovação</li>
+              </ul>
+            </div>
+            <div class="estagio-beneficios">
+              <h4>🎯 Benefícios Alcançados:</h4>
+              <ul>
+                <li>Processos validados pelas áreas</li>
+                <li>Consenso organizacional</li>
+                <li>Pronto para implementação</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Painel de Controle -->
+      <div class="painel-controle">
+        <h3>🎛️ Painel de Controle - Status dos Estágios</h3>
+        <div class="status-overview">
+          <div class="status-item">
+            <span class="status-label">Estágio Atual:</span>
+            <span class="status-value" id="estagio-atual">1 - Diagnóstico Inicial</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Progresso Geral:</span>
+            <span class="status-value" id="progresso-geral">0%</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Próximo Passo:</span>
+            <span class="status-value" id="proximo-passo">Iniciar Diagnóstico</span>
+          </div>
+        </div>
+        
+        <div class="acoes-rapidas">
+          <h4>⚡ Ações Rápidas:</h4>
+          <button onclick="marcarEstagioCompleto(1)" class="btn-estagio">✅ Marcar Estágio 1</button>
+          <button onclick="marcarEstagioCompleto(2)" class="btn-estagio">✅ Marcar Estágio 2</button>
+          <button onclick="marcarEstagioCompleto(3)" class="btn-estagio">✅ Marcar Estágio 3</button>
+          <button onclick="marcarEstagioCompleto(4)" class="btn-estagio">✅ Marcar Estágio 4</button>
+          <button onclick="marcarEstagioCompleto(5)" class="btn-estagio">✅ Marcar Estágio 5</button>
+          <button onclick="resetarProgresso()" class="btn-reset">🔄 Resetar Progresso</button>
+        </div>
+      </div>
+    </div>
+    
+                   <div class="rodape">
+            <hr>
+            Guia BPM para FORTES Engenharia &mdash; Vitória-ES
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Modal de Zoom para Imagens -->
+    <div id="imageZoomModal" class="image-zoom-modal">
+      <span class="zoom-close" onclick="closeImageZoom()">&times;</span>
+      <img class="zoom-content" id="zoomedImage" src="" alt="">
+      <div class="zoom-info" id="zoomInfo">
+        Para sair dessa tela: ✅ Clique no fundo escuro • ✅ Tecla ESC • ✅ Botão X
+      </div>
+    </div>
+   
+   <script>
+     const bpmnElements = {
+       startEvent: {
+         type: "Evento de Início",
+         description: "Ponto de partida do processo.",
+         extra: "Este evento dispara o início do fluxo de trabalho."
+       },
+       taskCriarSolicitacao: {
+         type: "Tarefa: Criar Solicitação",
+         description: "Atividade onde a solicitação é criada e formalizada.",
+         extra: "Responsável pela entrada inicial da demanda no sistema."
+       },
+      taskAnalisarDemanda: {
+        type: "Tarefa: Analisar Demanda",
+        description: "Processamento e análise detalhada da solicitação.",
+        extra: "Executado pela equipe de Compras para avaliação criteriosa da demanda."
+      },
+       taskEnviarCotacao: {
+         type: "Tarefa: Enviar Cotação",
+         description: "Comunicação externa para fornecedores ou parceiros.",
+         extra: "Envia documentos e solicitações oficiais de cotação."
+       },
+       taskAprovarCompra: {
+         type: "Tarefa: Aprovar Compra",
+         description: "Aprovação hierárquica superior para validação final.",
+         extra: "Executado pela diretoria para validar a decisão de compra."
+       },
+       gatewayAprovacao: {
+         type: "Gateway Exclusivo: Aprovação",
+         description: "Decisão: Compra foi aprovada?",
+         extra: "Gateway exclusivo (XOR) - APROVADA vai para Controle, REPROVADA volta para Compras."
+       },
+       taskControlarQualidade: {
+         type: "Tarefa: Controlar Qualidade",
+         description: "Recebimento e controle de qualidade do processo.",
+         extra: "Garantia da conformidade e qualidade final dos produtos."
+       },
+       endEvent: {
+         type: "Evento de Fim",
+         description: "Conclusão do processo.",
+         extra: "Marca o término bem-sucedido do fluxo de trabalho."
+       }
+     };
+
+     const tooltip = document.getElementById("tooltip");
+     const detailsPanel = document.getElementById("details-panel");
+     const detailsTitle = document.getElementById("details-title");
+     const detailsType = document.getElementById("details-type");
+     const detailsDescription = document.getElementById("details-description");
+     const detailsExtra = document.getElementById("details-extra");
+     const closeBtn = detailsPanel.querySelector(".close-btn");
+     
+     function showTooltip(text, x, y) {
+       tooltip.textContent = text;
+       tooltip.style.left = x + 12 + "px";
+       tooltip.style.top = y + 12 + "px";
+       tooltip.style.opacity = "1";
+       tooltip.setAttribute("aria-hidden", "false");
+     }
+     function hideTooltip() {
+       tooltip.style.opacity = "0";
+       tooltip.setAttribute("aria-hidden", "true");
+     }
+     function openDetailsPanel(id) {
+       const data = bpmnElements[id];
+       if (!data) return;
+       detailsTitle.textContent = id;
+       detailsType.textContent = data.type;
+       detailsDescription.textContent = data.description;
+       detailsExtra.textContent = data.extra || "";
+       detailsPanel.classList.add("active");
+       detailsPanel.setAttribute("aria-hidden", "false");
+       detailsPanel.focus();
+     }
+     function closeDetailsPanel() {
+       detailsPanel.classList.remove("active");
+       detailsPanel.setAttribute("aria-hidden", "true");
+     }
+     function addInteractivity() {
+       document.querySelectorAll(".event, .task, .gateway").forEach(el => {
+         el.addEventListener("mouseenter", e => {
+           const id = e.currentTarget.getAttribute("data-id");
+           if (id && bpmnElements[id]) {
+             showTooltip(bpmnElements[id].type, e.pageX, e.pageY);
+           }
+         });
+         el.addEventListener("mousemove", e => {
+           const id = e.currentTarget.getAttribute("data-id");
+           if (id && bpmnElements[id]) {
+             showTooltip(bpmnElements[id].type, e.pageX, e.pageY);
+           }
+         });
+         el.addEventListener("mouseleave", () => {
+           hideTooltip();
+         });
+         el.addEventListener("click", e => {
+           const id = e.currentTarget.getAttribute("data-id");
+           if (id) openDetailsPanel(id);
+         });
+         el.addEventListener("keydown", e => {
+           if (e.key === "Enter" || e.key === " ") {
+             e.preventDefault();
+             const id = e.currentTarget.getAttribute("data-id");
+             if (id) openDetailsPanel(id);
+           }
+         });
+       });
+     }
+     closeBtn.addEventListener("click", closeDetailsPanel);
+     document.addEventListener("keydown", e => {
+       if (e.key === "Escape" && detailsPanel.classList.contains("active")) {
+         closeDetailsPanel();
+       }
+     });
+     document.addEventListener("mousemove", e => {
+       if (tooltip.style.opacity === "1") {
+         const padding = 20;
+         let x = e.pageX + 12;
+         let y = e.pageY + 12;
+         const rect = tooltip.getBoundingClientRect();
+         const winW = window.innerWidth;
+         const winH = window.innerHeight;
+         if (x + rect.width + padding > winW) x = e.pageX - rect.width - 12;
+         if (y + rect.height + padding > winH) y = e.pageY - rect.height - 12;
+         tooltip.style.left = x + "px";
+         tooltip.style.top = y + "px";
+       }
+     });
+
+    // Funcionalidade de Zoom para Imagens
+    function initializeImageZoom() {
+      // Adicionar classe zoomable e evento de clique para todas as imagens
+      const images = document.querySelectorAll('img[src$=".png"], img[src$=".jpg"], img[src$=".jpeg"], img[src$=".gif"]');
+      
+      images.forEach(img => {
+        // Adicionar classe para cursor de zoom
+        img.classList.add('zoomable-image');
+        
+        // Adicionar evento de clique
+        img.addEventListener('click', function(e) {
+          e.preventDefault();
+          openImageZoom(this.src, this.alt);
+        });
+        
+        // Adicionar título indicativo
+        if (!img.title) {
+          img.title = '🔍 Clique para ampliar a imagem';
+        }
+      });
+    }
+
+    function openImageZoom(imageSrc, imageAlt) {
+      const modal = document.getElementById('imageZoomModal');
+      const zoomedImage = document.getElementById('zoomedImage');
+      const zoomInfo = document.getElementById('zoomInfo');
+      
+      zoomedImage.src = imageSrc;
+      zoomedImage.alt = imageAlt;
+      
+      // Atualizar informações do zoom
+      if (imageAlt) {
+        zoomInfo.innerHTML = `
+          <strong>${imageAlt}</strong><br>
+          Para sair dessa tela: ✅ Clique no fundo escuro • ✅ Tecla ESC • ✅ Botão X
+        `;
+      } else {
+        zoomInfo.innerHTML = `Para sair dessa tela: ✅ Clique no fundo escuro • ✅ Tecla ESC • ✅ Botão X`;
+      }
+      
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden'; // Prevenir scroll
+      
+      // Adicionar evento de clique no modal para fechar
+      modal.onclick = function(e) {
+        if (e.target === modal) {
+          closeImageZoom();
+        }
+      };
+    }
+
+    function closeImageZoom() {
+      const modal = document.getElementById('imageZoomModal');
+      modal.classList.remove('show');
+      document.body.style.overflow = 'auto'; // Restaurar scroll
+      
+      // Remover evento de clique
+      modal.onclick = null;
+    }
+
+    // Fechar zoom com tecla ESC
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeImageZoom();
+      }
+    });
+
+    // Adicionar evento de clique no modal quando ele for criado
+    document.addEventListener('DOMContentLoaded', function() {
+      const modal = document.getElementById('imageZoomModal');
+      const zoomedImage = document.getElementById('zoomedImage');
+      const zoomInfo = document.getElementById('zoomInfo');
+      
+      // Clique no modal (fundo) fecha
+      modal.addEventListener('click', function(e) {
+        if (e.target === modal) {
+          closeImageZoom();
+        }
+      });
+      
+      // Prevenir que clique na imagem ou info feche o modal
+      zoomedImage.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+      
+      zoomInfo.addEventListener('click', function(e) {
+        e.stopPropagation();
+      });
+    });
+
+    // Função para reproduzir vídeos
+    function playVideo(videoSrc, title, description) {
+      const video = document.getElementById('mainVideo');
+      const videoTitle = document.getElementById('mainVideoTitle');
+      const videoDescription = document.getElementById('mainVideoDescription');
+      
+      // Atualizar fonte do vídeo
+      video.src = videoSrc;
+      
+      // Atualizar informações
+      videoTitle.textContent = title;
+      videoDescription.textContent = description;
+      
+      // Carregar e reproduzir
+      video.load();
+      video.play();
+      
+      // Scroll para o player
+      document.querySelector('.video-container').scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
+  </script>
+</body>
+</html>
