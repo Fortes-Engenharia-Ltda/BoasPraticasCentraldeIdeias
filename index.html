@@ -1139,7 +1139,7 @@
         <li><a href="#capitulo9" onclick="scrollToSection('capitulo9')">9. Implementação Fusion Platform</a></li>
         <li><a href="#videos-treinamento" onclick="scrollToSection('videos-treinamento')">🎥 Treinamento em Vídeo</a></li>
         <li><a href="#framework-maturidade" onclick="scrollToSection('framework-maturidade')">🔍 Framework de Maturidade</a></li>
-        <li><a href="https://forteseng.sharepoint.com/sites/InovaFortes" onclick="scrollToSection('📂 Sharepoint InovaFortes')"> SharePoint InovaFortes</a></li>
+        <li><a href="https://forteseng.sharepoint.com/sites/InovaFortes" onclick="scrollToSection('Sharepoint InovaFortes')"> 📂 SharePoint InovaFortes</a></li>
       </ul>
     </nav>
     
@@ -2760,62 +2760,63 @@
 
       <!-- Vídeo Principal -->
       <div class="video-container">
-        <video class="video-player" controls id="mainVideo">
-          <source src="videos/Treinamento - Introdução - 01.mp4" type="video/mp4">
-          Seu navegador não suporta o elemento de vídeo.
-        </video>
+        <iframe id="mainVideo"
+          src="https://forteseng.sharepoint.com/sites/InovaFortes/_layouts/15/embed.aspx?UniqueId=3d33ee33-1d88-48d0-b026-67bff0568a0c&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Afalse%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create"
+          frameborder="0" scrolling="no" allowfullscreen
+          style="border:none; width:100%; aspect-ratio:16/9;">
+        </iframe>
         <div class="video-info">
           <div class="video-title" id="mainVideoTitle">Treinamento - Introdução - 01</div>
           <div class="video-description" id="mainVideoDescription">Introdução aos conceitos de BPM e visão geral do treinamento completo.</div>
-          <div class="video-duration" id="mainVideoDuration">Duração: 32 segundos</div>
+          <div class="video-duration" id="mainVideoDuration"></div>
         </div>
       </div>
 
       <!-- Grid de Vídeos -->
       <div class="video-grid">
-        <div class="video-card" onclick="playVideo('videos/Treinamento - Introdução - 01.mp4', 'Treinamento - Introdução - 01', 'Introdução aos conceitos de BPM e visão geral do treinamento completo.')">
+        <div class="video-card" onclick="playVideo('https://forteseng.sharepoint.com/sites/InovaFortes/_layouts/15/embed.aspx?UniqueId=3d33ee33-1d88-48d0-b026-67bff0568a0c&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Afalse%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create', 'Introdução aos conceitos de BPM e visão geral do treinamento completo.', 'sharepoint')">
           <h4>📚 Vídeo 01 - Introdução</h4>
           <p>Conceitos fundamentais de BPM, metodologias aplicáveis e visão geral do processo de solicitação de veículo.</p>
           <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 32 segundos</div>
           <span class="video-link">▶️ Assistir</span>
         </div>
 
-        <div class="video-card" onclick="playVideo('videos/Treinamento - Modelagem Inicial - 02.mp4', 'Treinamento - Modelagem Inicial - 02', 'Criação do diagrama BPMN e configuração inicial do processo no Fusion Platform.')">
+        <div class="video-card" onclick="playVideo('https://forteseng.sharepoint.com/sites/InovaFortes/_layouts/15/embed.aspx?UniqueId=b4b15f33-d304-453b-b10d-8d6fdddfffb3&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Afalse%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create', 'Treinamento - Construção dos Formulários - Parte 01 - 03', 'Primeira parte da criação de formulários: configuração básica e campos principais.', 'sharepoint')">
           <h4>🎨 Vídeo 02 - Modelagem Inicial</h4>
           <p>Criação do diagrama BPMN, definição de atividades e configuração inicial do processo no sistema.</p>
           <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 09:29 min</div>
           <span class="video-link">▶️ Assistir</span>
         </div>
 
-        <div class="video-card" onclick="playVideo('videos/Treinamento - Construção dos Formulários - Parte 01 - 03.mp4', 'Treinamento - Construção dos Formulários - Parte 01 - 03', 'Primeira parte da criação de formulários: configuração básica e campos principais.')">
+        <div class="video-card" onclick="playVideo('https://forteseng.sharepoint.com/sites/InovaFortes/_layouts/15/embed.aspx?UniqueId=f11cb612-438d-4490-8ecc-d14aeacb2136&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Afalse%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create', 'Criação do diagrama BPMN e configuração inicial do processo no Fusion Platform.', 'sharepoint')">
           <h4>📝 Vídeo 03 - Formulários (Parte 1)</h4>
           <p>Primeira parte da construção de formulários: configuração básica, campos principais e validações.</p>
-          <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 05:20 min</div>
+          <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 05:20 min</div>  
           <span class="video-link">▶️ Assistir</span>
         </div>
-
-        <div class="video-card" onclick="playVideo('videos/Treinamento - Construção dos Formulários - Parte 02 - 04.mp4', 'Treinamento - Construção dos Formulários - Parte 02 - 04', 'Segunda parte da criação de formulários: campos específicos e configurações avançadas.')">
+        
+        <div class="video-card" onclick="playVideo('https://forteseng.sharepoint.com/sites/InovaFortes/_layouts/15/embed.aspx?UniqueId=d336dc8c-de2e-49e6-b96d-ec966608900a&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Afalse%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create', 'Treinamento - Construção dos Formulários - Parte 02 - 04', 'Segunda parte da criação de formulários: campos específicos e configurações avançadas.', 'sharepoint')">
           <h4>📝 Vídeo 04 - Formulários (Parte 2)</h4>
           <p>Segunda parte da construção de formulários: campos específicos, configurações avançadas e validações.</p>
           <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 09:26 min</div>
           <span class="video-link">▶️ Assistir</span>
         </div>
 
-        <div class="video-card" onclick="playVideo('videos/Treinamento - Vinculação do Formulário ao Processo e Configuração das Atividades - 05.mp4', 'Treinamento - Vinculação do Formulário ao Processo e Configuração das Atividades - 05', 'Vinculação dos formulários ao processo BPMN e configuração detalhada de cada atividade.')">
+        <div class="video-card" onclick="playVideo('https://forteseng.sharepoint.com/sites/InovaFortes/_layouts/15/embed.aspx?UniqueId=0658e9fa-db39-4d35-b30c-55756aa8fe45&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Afalse%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create', 'Treinamento - Vinculação do Formulário ao Processo e Configuração das Atividades - 05', 'Vinculação dos formulários ao processo BPMN e configuração detalhada de cada atividade.', 'sharepoint')">
           <h4>🔗 Vídeo 05 - Vinculação e Atividades</h4>
           <p>Vinculação dos formulários ao processo BPMN e configuração detalhada de cada atividade do fluxo.</p>
           <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 10:04 min</div>
           <span class="video-link">▶️ Assistir</span>
         </div>
 
-        <div class="video-card" onclick="playVideo('videos/Treinamento - Criação Papéis - Configuração dos Participantes - Liberação da Modelagem - 06.mp4', 'Treinamento - Criação Papéis - Configuração dos Participantes - Liberação da Modelagem - 06', 'Criação de papéis, configuração de participantes e liberação final da modelagem para execução.')">
+        <div class="video-card" onclick="playVideo('https://forteseng.sharepoint.com/sites/InovaFortes/_layouts/15/embed.aspx?UniqueId=c96e4c14-ed9c-4bf6-8d1c-ca310e736837&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Afalse%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create', 'Treinamento - Criação Papéis - Configuração dos Participantes - Liberação da Modelagem - 06', 'Criação de papéis, configuração de participantes e liberação final da modelagem para execução.', 'sharepoint')">
           <h4>👥 Vídeo 06 - Papéis e Liberação</h4>
           <p>Criação de papéis, configuração de participantes e liberação final da modelagem para execução.</p>
           <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 03:50 min</div>
           <span class="video-link">▶️ Assistir</span>
         </div>
 
-        <div class="video-card" onclick="playVideo('videos/Treinamento - Teste com a Versão Criada - 07.mp4', 'Treinamento - Teste com a Versão Criada - 07', 'Teste prático do processo criado, demonstração de execução e validação final.')">
+        <div class="video-card" onclick="playVideo('https://forteseng.sharepoint.com/sites/InovaFortes/_layouts/15/embed.aspx?UniqueId=15c42173-dd9e-4df0-9ae2-e3c0c0aaceb0&embed=%7B%22hvm%22%3Atrue%2C%22ust%22%3Afalse%7D&referrer=StreamWebApp&referrerScenario=EmbedDialog.Create', 'Treinamento - Teste com a Versão Criada - 07', 'Teste prático do processo criado, demonstração de execução e validação final.', 'sharepoint')">
           <h4>🧪 Vídeo 07 - Teste Prático</h4>
           <p>Teste prático do processo criado, demonstração de execução e validação final do sistema.</p>
           <div style="color: #888; font-size: 12px; margin-top: 5px;">⏱️ 07:21 min</div>
@@ -3279,10 +3280,24 @@
 
     // Função para reproduzir vídeos
     function playVideo(videoSrc, title, description) {
-      const video = document.getElementById('mainVideo');
-      const videoTitle = document.getElementById('mainVideoTitle');
-      const videoDescription = document.getElementById('mainVideoDescription');
-      
+  const video = document.getElementById('mainVideo');
+  const videoTitle = document.getElementById('mainVideoTitle');
+  const videoDescription = document.getElementById('mainVideoDescription');
+
+  // ✅ Adicionado: suporte a embed iframe (SharePoint)
+  if (videoSrc.startsWith('http')) {
+    video.outerHTML = `<iframe id="mainVideo" src="${videoSrc}" 
+      frameborder="0" allowfullscreen 
+      style="width:100%; aspect-ratio:16/9; border:none;"></iframe>`;
+  } else {
+    video.src = videoSrc;
+    video.load();
+    video.play();
+  }
+
+  videoTitle.textContent = title;
+  videoDescription.textContent = description;
+}
       // Atualizar fonte do vídeo
       video.src = videoSrc;
       
@@ -3299,7 +3314,7 @@
         behavior: 'smooth',
         block: 'center'
       });
-    }
+
   </script>
 </body>
 </html>
