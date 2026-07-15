@@ -966,7 +966,9 @@
     function scrollToSection(sectionId) {
       const section = document.getElementById(sectionId);
       if (section) {
-        section.scrollIntoView({ behavior: 'smooth' });
+        const offset = window.innerWidth <= 768 ? 80 : 30;
+        const top = section.getBoundingClientRect().top + window.scrollY - offset;
+        window.scrollTo({ top, behavior: 'smooth' });
         
         // Atualizar menu ativo
         updateActiveMenu(sectionId);
@@ -1216,7 +1218,7 @@
         <li><a href="#capitulo9" onclick="scrollToSection('capitulo9')">9. Implementação Fusion Platform</a></li>
         <li><a href="#videos-treinamento" onclick="scrollToSection('videos-treinamento')">🎥 Treinamento em Vídeo</a></li>
         <li><a href="#framework-maturidade" onclick="scrollToSection('framework-maturidade')">🔍 Framework de Maturidade</a></li>
-        <li><a href="https://forteseng.sharepoint.com/sites/InovaFortes" onclick="scrollToSection('Sharepoint InovaFortes')"> 📂 SharePoint InovaFortes</a></li>
+        <li><a href="https://forteseng.sharepoint.com/sites/InovaFortes" onclick="scrollToSection('Sharepoint InovaFortes')" target="_blank"> 📂 SharePoint InovaFortes</a></li>
       </ul>
     </nav>
     
